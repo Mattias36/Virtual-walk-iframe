@@ -68,7 +68,7 @@ main {
     /* width: 100%; */
     /* Wybieramy mniejszy wymiar: 94vw ALBO wysokość dopasowana do formatu 16:9 z zapasem na nagłówek */
     width: min(94vw, calc((100vh - 60px) * (16 / 9)));
-    max-width: 1300px;
+    max-width: 1500px;
     aspect-ratio: 16 / 9;
     background-color: var(--bg-frame);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -79,19 +79,3 @@ main {
     flex-direction: row;
 }
 
-/* Responsywność dla głównej ramki */
-/* @media (max-width: 900px) {
-    #container-360 {
-        width: 100vw;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-    }
-}
-
-@media (max-width: 600px) {
-    #info {
-        font-size: 12px;
-        padding: 4px 12px;
-    }
-} */

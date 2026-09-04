@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Przeglądarka 360 & Spacer</title>
-    
+
     <!-- Klasyczny arkusz stylów CSS -->
     <link rel="stylesheet" href="./static/css/style.css">
-    
+
     <!-- CSS dla biblioteki Pannellum (Spacer 360) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
 </head>
+
 <body>
 
     <main>
@@ -25,9 +28,9 @@
         <div id="container-360">
             <div id="canvas-wrapper">
                 <canvas id="main-canvas"></canvas>
-                
+
                 <canvas id="highlight-canvas"></canvas>
-                
+
                 <div id="apartment-tooltip" class="hidden"></div>
 
                 <div class="compass-wrapper">
@@ -38,48 +41,53 @@
                     <button class="btn-compass btn-w" onclick="rotateToDirection(91)" title="Zachód">W</button>
                 </div>
 
-                <button id="btn-toggle-view" onclick="toggleViewType()" title="Zmień widok (Blisko / Daleko)">
-                    <img id="btn-view-icon" 
-                         src="https://icons.iconarchive.com/icons/aniket-suvarna/box/128/bxs-zoom-out-icon.png" 
-                         alt="Lupa">
-                    <span id="btn-view-text">Widok z daleka</span>
-                </button>
+                <div class="canvas-controls">
+                    <div class="bottom-controls-bar">
+                        <button id="btn-toggle-view" onclick="toggleViewType()" title="Zmień widok (Blisko / Daleko)">
+                            <img id="btn-view-icon"
+                                src="https://icons.iconarchive.com/icons/aniket-suvarna/box/128/bxs-zoom-out-icon.png"
+                                alt="Lupa">
+                            <span id="btn-view-text">Widok z daleka</span>
+                        </button>
 
-                <button id="btn-virtual-walk" onclick="switchMode('walk')" title="Uruchom wirtualny spacer">
-                    <svg class="icon-360" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        <path d="M12 6a6 6 0 0 1 6 6M6 12a6 6 0 0 1 6-6" />
-                        <text x="50%" y="60%" font-size="6" font-weight="bold" fill="currentColor" text-anchor="middle"
-                            dominant-baseline="middle" style="font-family: sans-serif;">360</text>
-                    </svg>
-                    Wirtualny spacer
-                </button>
+                        <button id="btn-virtual-walk" onclick="switchMode('walk')" title="Uruchom wirtualny spacer">
+                            <svg class="icon-360" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                                <path d="M12 6a6 6 0 0 1 6 6M6 12a6 6 0 0 1 6-6" />
+                                <text x="50%" y="60%" font-size="6" font-weight="bold" fill="currentColor"
+                                    text-anchor="middle" dominant-baseline="middle"
+                                    style="font-family: sans-serif;">360</text>
+                            </svg>
+                            Wirtualny spacer
+                        </button>
 
-                <!-- Wewnątrz #canvas-wrapper, obok #btn-virtual-walk -->
-             
+                        <div class="legend-wrapper">
+                            <button id="btn-toggle-legend" class="btn-legend-toggle" title="Pokaż statusy mieszkań">
+                                <span>Statusy</span>
+                            </button>
 
-                <button id="btn-toggle-legend" class="btn-legend-toggle" title="Pokaż statusy mieszkań">
-                    <span>Statusy</span>
-                </button>
-           
-                <!-- Dymek Legendy -->
-                <div id="legend-box" class="legend-box hidden">
-                    <div class="legend-item"><span class="color-dot free"></span> Dostępne</div>
-                    <div class="legend-item"><span class="color-dot reserved"></span> Rezerwacja</div>
-                    <div class="legend-item"><span class="color-dot sold"></span> Sprzedane</div>
+                            <!-- Dymek Legendy -->
+                            <div id="legend-box" class="legend-box hidden">
+                                <div class="legend-item"><span class="color-dot free"></span> Dostępne</div>
+                                <div class="legend-item"><span class="color-dot reserved"></span> Rezerwacja</div>
+                                <div class="legend-item"><span class="color-dot sold"></span> Sprzedane</div>
+                            </div>
+                        </div>
+                        <button id="btn-fullscreen" title="Pełny ekran">
+                            <svg class="icon-fullscreen-enter" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <svg class="icon-fullscreen-exit hidden" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 10h6V4M20 14h-6v6M10 10l-7-7M14 14l7 7" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                
-                <button id="btn-fullscreen" title="Pełny ekran">
-                    <svg class="icon-fullscreen-enter" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <svg class="icon-fullscreen-exit hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 10h6V4M20 14h-6v6M10 10l-7-7M14 14l7 7" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </button>
             </div>
 
             <div id="sidebar-container" class="open">
@@ -90,7 +98,7 @@
 
                 <div id="apartment-sidebar" class="sidebar">
                     <h3>Lista lokali</h3>
-                    
+
                     <!-- Ta lista docelowo będzie generowana z pliku CSV/JSON -->
                     <div class="apartment-list" id="apartment-list-container"></div>
 
@@ -137,7 +145,7 @@
             </div>
         </div>
 
-      
+
     </main>
 
     <!-- 1. Biblioteki zewnętrzne -->
@@ -162,4 +170,5 @@
     <!-- 4. Główny moduł aplikacji (ES6 Module - importuje wszystkie podpliki z /js/) -->
     <script type="module" src="./static/js/main.js"></script>
 </body>
+
 </html>
