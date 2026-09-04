@@ -1,0 +1,17 @@
+{
+    "name": "Makieta3D",
+    "main": "index.html",
+    "toolbar": true,
+    "window": {
+        "title": "Makieta Mieszkań 3D",
+        "width": 1280,
+        "height": 720,
+        "icon": "icon.png",
+        "position": "center",
+        "resizable": true
+    },
+    "dependencies": {
+        "canvas": "^3.2.3",
+        "xlsx": "^0.18.5"
+    }
+}

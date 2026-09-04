@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Przeglądarka 360 & Spacer</title>
+    
+    <!-- Klasyczny arkusz stylów CSS -->
+    <link rel="stylesheet" href="./static/css/style.css">
+    
+    <!-- CSS dla biblioteki Pannellum (Spacer 360) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+</head>
+<body>
+
+    <main>
+        <!-- DEBUG INFO -->
+        <div id="info">
+            Klatka: <span id="frame-counter">0000</span> / 0119 | Status: <span id="color-id">Brak</span>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- WIDOK 1: MAKIETA 3D / NAWIGATOR (DOMYŚLNY)                          -->
+        <!-- =================================================================== -->
+        <div id="container-360">
+            <div id="canvas-wrapper">
+                <canvas id="main-canvas"></canvas>
+                
+                <canvas id="highlight-canvas"></canvas>
+                
+                <div id="apartment-tooltip" class="hidden"></div>
+
+                <div class="compass-wrapper">
+                    <div class="compass-center"></div>
+                    <button class="btn-compass btn-n" onclick="rotateToDirection(1)" title="Północ">N</button>
+                    <button class="btn-compass btn-e" onclick="rotateToDirection(31)" title="Wschód">E</button>
+                    <button class="btn-compass btn-s" onclick="rotateToDirection(61)" title="Południe">S</button>
+                    <button class="btn-compass btn-w" onclick="rotateToDirection(91)" title="Zachód">W</button>
+                </div>
+
+                <button id="btn-toggle-view" onclick="toggleViewType()" title="Zmień widok (Blisko / Daleko)">
+                    <img id="btn-view-icon" 
+                         src="https://icons.iconarchive.com/icons/aniket-suvarna/box/128/bxs-zoom-out-icon.png" 
+                         alt="Lupa">
+                    <span id="btn-view-text">Widok z daleka</span>
+                </button>
+
+                <button id="btn-virtual-walk" onclick="switchMode('walk')" title="Uruchom wirtualny spacer">
+                    <svg class="icon-360" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        <path d="M12 6a6 6 0 0 1 6 6M6 12a6 6 0 0 1 6-6" />
+                        <text x="50%" y="60%" font-size="6" font-weight="bold" fill="currentColor" text-anchor="middle"
+                            dominant-baseline="middle" style="font-family: sans-serif;">360</text>
+                    </svg>
+                    Wirtualny spacer
+                </button>
+
+                <!-- Wewnątrz #canvas-wrapper, obok #btn-virtual-walk -->
+             
+
+                <button id="btn-toggle-legend" class="btn-legend-toggle" title="Pokaż statusy mieszkań">
+                    <span>Statusy</span>
+                </button>
+           
+                <!-- Dymek Legendy -->
+                <div id="legend-box" class="legend-box hidden">
+                    <div class="legend-item"><span class="color-dot free"></span> Dostępne</div>
+                    <div class="legend-item"><span class="color-dot reserved"></span> Rezerwacja</div>
+                    <div class="legend-item"><span class="color-dot sold"></span> Sprzedane</div>
+                </div>
+                
+                <button id="btn-fullscreen" title="Pełny ekran">
+                    <svg class="icon-fullscreen-enter" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <svg class="icon-fullscreen-exit hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 10h6V4M20 14h-6v6M10 10l-7-7M14 14l7 7" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="sidebar-container" class="open">
+
+                <button id="sidebar-toggle" onclick="toggleSidebar()" title="Pokaż/Ukryj listę lokali">
+                    <span id="toggle-icon">&#10095;</span>
+                </button>
+
+                <div id="apartment-sidebar" class="sidebar">
+                    <h3>Lista lokali</h3>
+                    
+                    <!-- Ta lista docelowo będzie generowana z pliku CSV/JSON -->
+                    <div class="apartment-list" id="apartment-list-container"></div>
+
+                    <div id="apartment-info-card" class="info-card hidden">
+                        <h4>Szczegóły lokalu</h4>
+                        <table>
+                            <tr>
+                                <td>Metraż:</td>
+                                <td><span id="info-size">-</span> m²</td>
+                            </tr>
+                            <tr>
+                                <td>Pokoje:</td>
+                                <td><span id="info-rooms">-</span></td>
+                            </tr>
+                            <tr>
+                                <td>Cena:</td>
+                                <td><span id="info-price">-</span> PLN</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td><span id="info-status">-</span></td>
+                            </tr>
+                        </table>
+                        <button id="info-link-btn" onclick="goToApartmentUrl()">Karta lokalu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- WIDOK 2: WIRTUALNY SPACER PANORAMA (UKRYTY DOMYŚLNIE)                -->
+        <!-- =================================================================== -->
+        <div id="container-walk" class="hidden">
+            <div id="panorama-viewer">
+                <!-- Przycisk przeniesiony do wnętrza kontenera panoramy -->
+                <button id="btn-back-to-makieta" onclick="switchMode('makieta')" title="Powrót do widoku 3D">
+                    <svg class="icon-back" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Powrót do widoku 3D
+                </button>
+            </div>
+        </div>
+
+      
+    </main>
+
+    <!-- 1. Biblioteki zewnętrzne -->
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- 2. Konfiguracja zmiennych pomocniczych dla spaceru -->
+    <script>
+        const panorama1Path = "./static/panoramy_jpg/1.jpg";
+        const panorama2Path = "./static/panoramy_jpg/2.jpg";
+        const panorama3Path = "./static/panoramy_jpg/3.jpg";
+        const panorama4Path = "./static/panoramy_jpg/4.jpg";
+        const panorama5Path = "./static/panoramy_jpg/5.jpg";
+        const panorama6Path = "./static/panoramy_jpg/6.jpg";
+        const panorama7Path = "./static/panoramy_jpg/7.jpg";
+
+    </script>
+
+    <!-- 3. Skrypt spaceru (używa Pannellum oraz zmiennych wyżej) -->
+    <script src="./static/js/walk.js"></script>
+
+    <!-- 4. Główny moduł aplikacji (ES6 Module - importuje wszystkie podpliki z /js/) -->
+    <script type="module" src="./static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Folder z zależnościami npm (BARDZO WAŻNE)
+node_modules/
+
+# Ciężkie zasoby graficzne i dane inwestycji
+static/MovieRenders/
+static/panoramy_jpg/
+mieszkania.xlsx
+
+# Pliki konfiguracyjne i lokalne
+*.json
+*.txt
+
+# Wyjątek: NIE ignoruj kluczowego pliku manifestu npm!
+!package.json
+!package-lock.json

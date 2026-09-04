@@ -1,0 +1,97 @@
+/* --- ZMIENNE GLOBALNE --- */
+:root {
+    --primary-color: #ff9500;
+    --primary-hover: #e08400;
+    --bg-dark: #000;
+    --bg-frame: #050505;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-blur: blur(20px) saturate(180%);
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ZMIANA: Wymuszenie dziedziczenia wysokości przez strukturę dokumentu */
+html, body, #app-container, .viewer-container {
+    height: 100vh; /* Fallback dla starszych przeglądarek */
+    height: 100dvh; /* Dynamiczna wysokość uwzględniająca paski Safari */
+    width: 100vw;
+    overflow: hidden;
+    position: fixed; /* Zapobiega "sprężynowaniu" strony na iOS */
+
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-dark); 
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* ZMIANA: Zastąpiono min-height na pełne 100% okna */
+    margin: 0;
+    padding: 0; /* ZMIANA: Usunięto stały padding, który psuł dopasowanie w iframe */
+    overflow: hidden; /* ZMIANA: Blokada niepotrzebnych suwaków w iframe */
+}
+
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: clamp(4px, 1.5vh, 15px); /* Płynny padding dopasowany do okna */
+    box-sizing: border-box;
+}
+
+#info {
+    margin-bottom: clamp(6px, 1.2vh, 12px);
+    font-size: clamp(11px, 1.1vw, 14px);
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.08);
+    padding: clamp(3px, 0.6vh, 6px) clamp(10px, 1.2vw, 16px);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    white-space: nowrap;
+}
+
+/* GŁÓWNY FRAME (Dynamiczne skalowanie proporcjonalne) */
+#container-360 {
+    position: relative;
+    /* width: 100%; */
+    /* Wybieramy mniejszy wymiar: 94vw ALBO wysokość dopasowana do formatu 16:9 z zapasem na nagłówek */
+    width: min(94vw, calc((100vh - 60px) * (16 / 9)));
+    max-width: 1300px;
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-frame);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(8px, 1.2vw, 16px);
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    display: flex; 
+    flex-direction: row;
+}
+
+/* Responsywność dla głównej ramki */
+/* @media (max-width: 900px) {
+    #container-360 {
+        width: 100vw;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+@media (max-width: 600px) {
+    #info {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+} */

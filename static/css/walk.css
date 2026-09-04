@@ -1,0 +1,164 @@
+/* ==========================================================================
+   INTEGRACJA TRYBU SPA (WIRTUALNY SPACER)
+   ========================================================================== */
+
+/* Główny kontener spaceru zajmujący identyczny obszar */
+#container-walk {
+    position: relative;
+    width: min(94vw, calc((100vh - 60px) * (16 / 9)));
+    max-width: 1300px;
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-frame);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(8px, 1.2vw, 16px);;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Widok WebGL od Pannellum wypełnia perfekcyjnie cały dedykowany kontener */
+#panorama-viewer {
+    position: relative;
+    width: 100%;
+    height: 100% !important;
+    background-color: #000;
+}
+
+/* Systemowa klasa natychmiastowego ukrywania nieaktywnego widoku */
+.hidden {
+    display: none !important;
+}
+
+
+/* Reset stylów dla elementów typu button, które udają stare linki <a> */
+#btn-virtual-walk, #btn-back-to-makieta {
+    border: 1px solid var(--primary-color, #ff9500);
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+#btn-back-to-makieta {
+    position: absolute;
+    bottom: clamp(10px, 2%, 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    
+    height: clamp(32px, 3vw, 44px); 
+    padding: 0 clamp(14px, 1.5vw, 24px);
+    
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--primary-color, #ff9500);
+    border-radius: 30px;
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(10px, 0.9vw, 13px);
+    
+    /* KLUCZOWA ZMIANA: Zwiększony z-index, aby przycisk był nad elementami Pannellum w fullscreenie */
+    z-index: 99999 !important; 
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.1);
+    transition: var(--transition-smooth, all 0.3s ease);
+    white-space: nowrap;
+    box-sizing: border-box;
+    cursor: pointer;
+    outline: none;
+}
+
+#btn-back-to-makieta:hover {
+    background: var(--primary-color, #ff9500);
+    color: #000;
+    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.6);
+    transform: translateX(-50%) scale(1.04);
+}
+
+#btn-back-to-makieta:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+.icon-back {
+    /* Płynne skalowanie ikony proporcjonalnie do tekstu/przycisku */
+    width: clamp(14px, 1.2vw, 18px);
+    height: clamp(14px, 1.2vw, 18px);
+    flex-shrink: 0; 
+    
+    /* Płynna animacja rotacji przy obrysie */
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    
+    transition: transform 0.3s ease;
+}
+
+/* Animacja po najechaniu (bez zmian, działa idealnie) */
+#btn-back-to-makieta:hover .icon-back {
+    transform: rotate(-15deg);
+}
+
+/* --- STYLE OD PANNELLUMA --- */
+.pnlm-title-box, .pnlm-author-box {
+    display: none !important;
+}
+
+.pnlm-hotspot-base.pnlm-scene { 
+    width: clamp(30px, 3.5vw, 50px) !important;
+    height: clamp(30px, 3.5vw, 50px) !important;
+    background-color: rgba(40, 40, 40, 0.144) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 50% !important;
+    background-position: center !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-size: 35% !important; 
+    background-repeat: no-repeat !important;
+}
+
+.pnlm-hotspot-base.pnlm-scene:hover {
+    background-color: rgba(60, 60, 60, 0.484) !important;
+    border-color: #ff9500 !important; 
+    transform: scale(1.1);
+    box-shadow: 0 12px 30px rgba(255, 149, 0, 0.3);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9500' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+.pnlm-hotspot-base.pnlm-scene:active {
+    transform: scale(0.95);
+}
+
+.pnlm-load-box, .pnlm-lsc {
+    display: none !important;
+}
+
+.pnlm-compass {
+    right: clamp(10px, 2%, 20px) !important;
+    bottom: clamp(10px, 2%, 20px) !important;
+    left: auto !important;
+    width: clamp(40px, 4.5vw, 60px) !important;
+    height: clamp(40px, 4.5vw, 60px) !important;
+    border-radius: 50% !important;
+    background-color: rgba(40, 40, 40, 0.4) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-size: 80% !important;
+    background-position: center !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    opacity: 0.85;
+    transition: all 0.3s ease !important;
+}
+.pnlm-compass:hover {
+    opacity: 1;
+    background-color: rgba(60, 60, 60, 0.6) !important;
+    border-color: #ff9500 !important;
+    transform: scale(1.05);
+}
