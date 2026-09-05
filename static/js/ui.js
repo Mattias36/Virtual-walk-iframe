@@ -3,6 +3,7 @@ import { drawScene, getApartmentCenterCoords } from './renderer.js';
 import { rotateToDirection } from './controls.js';
 
 const tooltip = document.getElementById('apartment-tooltip');
+let pendingSelectionTimeout = null;
 
 export function renderApartmentList() {
     const container = document.getElementById('apartment-list-container');
@@ -24,50 +25,22 @@ export function renderApartmentList() {
             </div>
         `;
 
-        item.addEventListener('mouseenter', () => highlightApartmentFromList(apt.id));
-        item.addEventListener('mouseleave', () => clearApartmentHighlight());
-        
-        // POPRAWKA: Przekazujemy 'true' jako drugi argument przy kliknięciu w element listy!
-        item.addEventListener('click', () => selectApartment(apt.id, true));
+        item.addEventListener('click', () => {
+            const isSelected = state.selectedApartment?.id === apt.id;
+            selectApartment(isSelected ? null : apt.id, !isSelected);
+        });
 
         container.appendChild(item);
     });
 }
 
-export function highlightApartmentFromList(apartmentId) {
-    state.listHighlightedApartment = state.colorLinks.find(item => item.id === apartmentId);
-
-    if (state.listHighlightedApartment) {
-        const coords = getApartmentCenterCoords(state.listHighlightedApartment);
-
-        if (coords && tooltip) {
-            let statusColor = '#00ff00';
-            if (state.listHighlightedApartment.status === 'Rezerwacja') statusColor = '#ffcc00';
-            else if (state.listHighlightedApartment.status === 'Sprzedane') statusColor = '#ff3333';
-
-            tooltip.innerHTML = `
-                <div class="tooltip-title">${state.listHighlightedApartment.name}</div>
-                <div class="tooltip-row"><span>Metraż:</span><span><strong>${state.listHighlightedApartment.size} m²</strong></span></div>
-                <div class="tooltip-row"><span>Pokoje:</span><span><strong>${state.listHighlightedApartment.rooms}</strong></span></div>
-                <div class="tooltip-row"><span>Status:</span><span style="color: ${statusColor}; font-weight: bold;">${state.listHighlightedApartment.status}</span></div>
-            `;
-            tooltip.style.left = `${coords.x}px`;
-            tooltip.style.top = `${coords.y}px`;
-            tooltip.classList.remove('hidden');
-        }
-    }
-    drawScene();
-}
-
-export function clearApartmentHighlight() {
-    state.listHighlightedApartment = null;
-    state.hoveredApartment = null;
-    if (tooltip) tooltip.classList.add('hidden');
-    drawScene();
-}
-
 export function selectApartment(apartmentId, shouldRotate = false) {
     const card = document.getElementById('apartment-info-card');
+
+    if (pendingSelectionTimeout) {
+        clearTimeout(pendingSelectionTimeout);
+        pendingSelectionTimeout = null;
+    }
     
     // 1. Czyszczenie poprzednich zaznaczeń z listy
     document.querySelectorAll('.apartment-item').forEach(el => el.classList.remove('active'));
@@ -108,7 +81,8 @@ export function selectApartment(apartmentId, shouldRotate = false) {
 
             rotateToDirection(Number(targetFrame));
 
-            setTimeout(() => {
+            pendingSelectionTimeout = setTimeout(() => {
+                pendingSelectionTimeout = null;
                 state.hoveredApartment = data;
                 showApartmentTooltipAtCenter(data);
             }, animDuration);
@@ -167,6 +141,7 @@ export function selectApartment(apartmentId, shouldRotate = false) {
         if (typeof toggleSidebar === 'function') toggleSidebar();
 
         setTimeout(() => {
+            if (state.selectedApartment?.id !== apartmentId) return;
             activateAndScroll();
             // Ponowne upewnienie się, że podświetlenie przetrwało otwieranie panelu
             state.hoveredApartment = data;
@@ -204,26 +179,6 @@ function showApartmentTooltipAtCenter(data) {
         tooltip.style.left = `${coords.x}px`;
         tooltip.style.top = `${coords.y}px`;
         tooltip.classList.remove('hidden');
-    }
-}
-
-export function highlightSidebarItem(apartmentId) {
-    if (state.lastCanvasHoveredSidebarId === apartmentId) return;
-
-    clearSidebarHighlight();
-    state.lastCanvasHoveredSidebarId = apartmentId;
-
-    const element = document.querySelector(`.apartment-item[data-id="${apartmentId}"]`);
-    if (element && !element.classList.contains('active')) {
-        element.classList.add('canvas-hovered');
-    }
-}
-
-export function clearSidebarHighlight() {
-    if (state.lastCanvasHoveredSidebarId) {
-        const element = document.querySelector(`.apartment-item[data-id="${state.lastCanvasHoveredSidebarId}"]`);
-        if (element) element.classList.remove('canvas-hovered');
-        state.lastCanvasHoveredSidebarId = null;
     }
 }
 

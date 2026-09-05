@@ -27,8 +27,6 @@ export const state = {
     ticking: false,
     hoveredApartment: null,
     selectedApartment: null,
-    listHighlightedApartment: null,
-    lastCanvasHoveredSidebarId: null,
 
     // Baza mieszkań
     colorLinks: []

@@ -1,6 +1,5 @@
 import { state } from './state.js';
 import { updateFrames, resetHighResState, drawScene } from './renderer.js';
-import { clearSidebarHighlight } from './ui.js';
 
 export function toggleViewType() {
     resetHighResState();
@@ -48,7 +47,6 @@ export function toggleViewType() {
             highlightCanvas.className = '';
         }
         
-        clearSidebarHighlight();
     } else {
         state.viewType = 'near';
 

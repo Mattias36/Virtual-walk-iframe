@@ -1,6 +1,5 @@
 import { state, maskCanvas, maskCtx } from './state.js';
 import { padNumber } from './imageLoader.js';
-import { highlightSidebarItem, clearSidebarHighlight } from './ui.js';
 
 const canvas = document.getElementById('main-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
@@ -246,7 +245,7 @@ export function drawScene() {
         state.canDrag = true;
 
         // Wykrywanie punktu pod kursor/dotykiem
-        if (!state.isAnimating && !state.isDragging && state.mouseX > 0 && state.mouseY > 0 && !state.listHighlightedApartment) {
+        if (!state.isAnimating && !state.isDragging && state.mouseX > 0 && state.mouseY > 0) {
             const rect = canvas.getBoundingClientRect();
             const imgRatio = canvas.width / canvas.height;
             const containerRatio = rect.width / rect.height;
@@ -299,10 +298,12 @@ export function drawScene() {
             }
         }
 
+        state.hoveredApartment = currentApt ? currentApt.id : null;
+
         const sidebar = document.getElementById('apartment-sidebar');
         const isSidebarOpen = sidebar && sidebar.classList.contains('open');
 
-        const activeApt = state.listHighlightedApartment || currentApt || state.selectedApartment;
+        const activeApt = state.selectedApartment;
 
         if (state.showAllStatuses) {
             if (colorIdDisplay) {
@@ -316,36 +317,9 @@ export function drawScene() {
             targetB = activeApt.b;
             targetStatus = activeApt.status;
 
-            if (tooltip && currentApt && !isSidebarOpen && state.mouseX > 0 && !state.listHighlightedApartment) {
-                highlightSidebarItem(activeApt.id);
-                state.hoveredApartment = activeApt.id;
-
-                const rect = canvas.getBoundingClientRect();
-                const tooltipX = state.mouseX - rect.left;
-                const tooltipY = state.mouseY - rect.top;
-
-                let statusColor = '#00ff00';
-                if (activeApt.status === 'Rezerwacja') statusColor = '#ffcc00';
-                else if (activeApt.status === 'Sprzedane') statusColor = '#ff3333';
-
-                tooltip.innerHTML = `
-                    <div class="tooltip-title">${activeApt.name}</div>
-                    <div class="tooltip-row"><span>Metraż:</span><span><strong>${activeApt.size} m²</strong></span></div>
-                    <div class="tooltip-row"><span>Pokoje:</span><span><strong>${activeApt.rooms}</strong></span></div>
-                    <div class="tooltip-row"><span>Status:</span><span style="color: ${statusColor}; font-weight: bold;">${activeApt.status}</span></div>
-                `;
-                tooltip.style.left = `${tooltipX}px`;
-                tooltip.style.top = `${tooltipY}px`;
-                tooltip.classList.remove('hidden');
-            } else {
-                if (tooltip) tooltip.classList.add('hidden');
-            }
-        } else {
-            if (!state.listHighlightedApartment && !state.selectedApartment) {
-                clearSidebarHighlight();
-                state.hoveredApartment = null;
-                if (tooltip) tooltip.classList.add('hidden');
-            }
+            if (tooltip && !isSidebarOpen) tooltip.classList.add('hidden');
+        } else if (!state.selectedApartment) {
+            if (tooltip) tooltip.classList.add('hidden');
         }
     }
 
