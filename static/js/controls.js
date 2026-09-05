@@ -16,6 +16,8 @@ let dragStartY = 0;
 export function rotateToDirection(targetFrame) {
     if (state.isAnimating || state.isDragging) return;
 
+    if (tooltip) tooltip.classList.add('hidden');
+
     resetHighResState();
 
     state.isAnimating = true;

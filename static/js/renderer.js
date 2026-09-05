@@ -316,8 +316,6 @@ export function drawScene() {
             targetG = activeApt.g;
             targetB = activeApt.b;
             targetStatus = activeApt.status;
-
-            if (tooltip && !isSidebarOpen) tooltip.classList.add('hidden');
         } else if (!state.selectedApartment) {
             if (tooltip) tooltip.classList.add('hidden');
         }
