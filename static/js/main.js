@@ -31,6 +31,7 @@ function initApp() {
     loadApartmentsFromExcel();
     preloadAllFrames();
     initControls();
+    initTouchButtonFeedback();
 
     // Nasłuchiwanie na przycisk legendy
     const btnToggleLegend = document.getElementById('btn-toggle-legend');
@@ -49,4 +50,29 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp, { once: true });
 } else {
     initApp();
+}
+
+function initTouchButtonFeedback() {
+    document.querySelectorAll('button').forEach(button => {
+        let feedbackTimeout;
+
+        button.addEventListener('pointerdown', event => {
+            if (event.pointerType !== 'touch') return;
+
+            document.body.classList.add('touch-device');
+            clearTimeout(feedbackTimeout);
+            button.classList.add('touch-active');
+        });
+
+        const clearFeedback = () => {
+            clearTimeout(feedbackTimeout);
+            feedbackTimeout = setTimeout(() => {
+                button.classList.remove('touch-active');
+                button.blur();
+            }, 180);
+        };
+
+        button.addEventListener('pointerup', clearFeedback);
+        button.addEventListener('pointercancel', clearFeedback);
+    });
 }
