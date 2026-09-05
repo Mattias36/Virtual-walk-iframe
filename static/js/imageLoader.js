@@ -48,6 +48,9 @@ export async function preloadAllFrames() {
     state.isMakietaReady = true;
     console.log("Klatki Z BLISKA załadowane.");
 
+    // Pierwszy render po zakończeniu ładowania, bez oczekiwania na ruch myszy.
+    updateFrames();
+
     preloadFarFrames()
 }
 
