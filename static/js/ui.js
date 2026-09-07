@@ -4,6 +4,7 @@ import { rotateToDirection } from './controls.js';
 
 const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;
+let sidebarScrollAnchor = null;
 
 function updateApartmentTooltipPosition(data) {
     if (!data || !tooltip) return;
@@ -53,6 +54,23 @@ export function renderApartmentList() {
         });
 
         container.appendChild(item);
+    });
+}
+
+function scrollToApartment(apartmentId, behavior = 'smooth') {
+    const listContainer = document.getElementById('apartment-list-container');
+    const activeItem = document.querySelector(`.apartment-item[data-id="${apartmentId}"]`);
+    if (!activeItem || !listContainer) return;
+
+    activeItem.classList.add('active');
+
+    const targetScrollTop = activeItem.offsetTop -
+        (listContainer.clientHeight / 2) +
+        (activeItem.offsetHeight / 2);
+
+    listContainer.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior
     });
 }
 
@@ -137,40 +155,23 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     const listContainer = document.getElementById('apartment-list-container');
     const isSidebarOpen = sidebarContainer && sidebarContainer.classList.contains('open');
 
-    const activateAndScroll = () => {
-        const activeItem = document.querySelector(`.apartment-item[data-id="${apartmentId}"]`);
-        if (!activeItem || !listContainer) return;
-
-        activeItem.classList.add('active');
-
-        const containerHeight = listContainer.clientHeight;
-        const itemOffset = activeItem.offsetTop;
-        const itemHeight = activeItem.offsetHeight;
-
-        const targetScrollTop = itemOffset - (containerHeight / 2) + (itemHeight / 2);
-
-        listContainer.scrollTo({
-            top: Math.max(0, targetScrollTop),
-            behavior: 'smooth'
-        });
-    };
-
     if (!isSidebarOpen) {
         if (typeof clear4kState === 'function') clear4kState();
         if (listContainer) listContainer.scrollTop = 0;
+        sidebarScrollAnchor = null;
         
         // Wywołujemy rozwinięcie sidebara
         if (typeof toggleSidebar === 'function') toggleSidebar();
 
         setTimeout(() => {
             if (state.selectedApartment?.id !== apartmentId) return;
-            activateAndScroll();
+            scrollToApartment(apartmentId);
             // Ponowne upewnienie się, że podświetlenie przetrwało otwieranie panelu
             state.hoveredApartment = data;
             if (typeof drawScene === 'function') drawScene();
         }, 380);
     } else {
-        activateAndScroll();
+        scrollToApartment(apartmentId);
     }
 }
 // POMOCNICZA FUNKCJA: Wywoływana PO ZAKOŃCZENIU rotacji
@@ -209,6 +210,17 @@ export function toggleSidebar() {
     const listContainer = document.getElementById('apartment-list-container');
     if (!sidebarContainer) return;
 
+    const wasOpen = sidebarContainer.classList.contains('open');
+    if (wasOpen && listContainer) {
+        const activeItem = listContainer.querySelector('.apartment-item.active');
+        const listRect = listContainer.getBoundingClientRect();
+
+        sidebarScrollAnchor = activeItem ? {
+            id: activeItem.dataset.id,
+            top: activeItem.getBoundingClientRect().top - listRect.top
+        } : null;
+    }
+
     sidebarContainer.classList.toggle('open');
     const isOpen = sidebarContainer.classList.contains('open');
 
@@ -225,16 +237,26 @@ export function toggleSidebar() {
         toggleIcon.innerHTML = isOpen ? "&#10095;" : "&#10094;";
     }
 
-    if (!isOpen && listContainer) {
-        listContainer.scrollTop = 0;
-    }
-
     if (isOpen && typeof clear4kState === 'function') {
         clear4kState();
     }
 
     // Po zakończeniu animacji sidebara przerysowujemy scenę z wybranym mieszkaniem
     setTimeout(() => {
+        if (isOpen && listContainer && sidebarScrollAnchor) {
+            const activeItem = listContainer.querySelector(
+                `.apartment-item[data-id="${sidebarScrollAnchor.id}"]`
+            );
+            const listRect = listContainer.getBoundingClientRect();
+
+            if (activeItem) {
+                const currentTop = activeItem.getBoundingClientRect().top - listRect.top;
+                listContainer.scrollTop += currentTop - sidebarScrollAnchor.top;
+            }
+
+            sidebarScrollAnchor = null;
+        }
+
         if (state.selectedApartment) {
             state.hoveredApartment = state.selectedApartment;
         }
