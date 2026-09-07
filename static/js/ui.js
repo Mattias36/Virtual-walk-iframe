@@ -5,6 +5,28 @@ import { rotateToDirection } from './controls.js';
 const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;
 
+function updateApartmentTooltipPosition(data) {
+    if (!data || !tooltip) return;
+
+    const coords = getApartmentCenterCoords(data);
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+    const wrapperRect = canvasWrapper?.getBoundingClientRect();
+
+    if (!coords || !wrapperRect) return;
+
+    tooltip.style.left = `${wrapperRect.left + coords.x}px`;
+    tooltip.style.top = `${wrapperRect.top + coords.y}px`;
+}
+
+const canvasWrapper = document.getElementById('canvas-wrapper');
+if (canvasWrapper && typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => {
+        if (!tooltip?.classList.contains('hidden') && state.selectedApartment) {
+            updateApartmentTooltipPosition(state.selectedApartment);
+        }
+    }).observe(canvasWrapper);
+}
+
 export function renderApartmentList() {
     const container = document.getElementById('apartment-list-container');
     if (!container) return;
@@ -175,9 +197,8 @@ function showApartmentTooltipAtCenter(data) {
             <div class="tooltip-row"><span>Pokoje:</span><span><strong>${data.rooms}</strong></span></div>
             <div class="tooltip-row"><span>Status:</span><span style="color: ${statusColor}; font-weight: bold;">${data.status}</span></div>
         `;
-        
-        tooltip.style.left = `${coords.x}px`;
-        tooltip.style.top = `${coords.y}px`;
+
+        updateApartmentTooltipPosition(data);
         tooltip.classList.remove('hidden');
     }
 }
@@ -218,6 +239,10 @@ export function toggleSidebar() {
             state.hoveredApartment = state.selectedApartment;
         }
         if (typeof drawScene === 'function') drawScene();
+
+        if (state.selectedApartment) {
+            showApartmentTooltipAtCenter(state.selectedApartment);
+        }
     }, 360);
 }
 
