@@ -6,6 +6,14 @@ const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;
 let sidebarScrollAnchor = null;
 
+function restoreSelectedApartmentTooltip() {
+    if (!state.showAllStatuses && state.selectedApartment) {
+        showApartmentTooltipAtCenter(state.selectedApartment);
+    }
+}
+
+window.addEventListener('apartment-rotation-end', restoreSelectedApartmentTooltip);
+
 function updateApartmentTooltipPosition(data) {
     if (!data || !tooltip) return;
 
@@ -176,7 +184,10 @@ export function selectApartment(apartmentId, shouldRotate = false) {
 }
 // POMOCNICZA FUNKCJA: Wywoływana PO ZAKOŃCZENIU rotacji
 function showApartmentTooltipAtCenter(data) {
-    if (!data) return;
+    if (!data || state.showAllStatuses) {
+        if (tooltip) tooltip.classList.add('hidden');
+        return;
+    }
 
     // Ponownie upewniamy się, że podświetlenie jest aktywne
     state.hoveredApartment = data;
@@ -296,4 +307,8 @@ export function toggleLegend() {
     }
 
     drawScene();
+
+    if (!state.showAllStatuses && state.selectedApartment) {
+        showApartmentTooltipAtCenter(state.selectedApartment);
+    }
 }

@@ -6,6 +6,10 @@ const container = document.getElementById('container-360');
 const colorIdDisplay = document.getElementById('color-id');
 const tooltip = document.getElementById('apartment-tooltip');
 
+function notifyRotationEnd() {
+    window.dispatchEvent(new CustomEvent('apartment-rotation-end'));
+}
+
 // 1. Deklarujemy hasDragged na poziomie modułu, aby wszystkie funkcje miały do niej dostęp
 let hasDragged = false;
 let dragStartX = 0;
@@ -52,6 +56,7 @@ export function rotateToDirection(targetFrame) {
             }
 
             drawScene();
+            notifyRotationEnd();
             return;
         }
 
@@ -114,6 +119,7 @@ export function initControls() {
     window.addEventListener('mouseup', () => {
         if (state.isDragging) {
             state.isDragging = false;
+            const didDrag = hasDragged;
             
             // Jeśli faktycznie obracaliśmy, zerujemy pozycję klastra hover, 
             // aby uniknąć przypadkowego podświetlenia mieszkania w miejscu puszczenia
@@ -123,6 +129,7 @@ export function initControls() {
             }
             
             drawScene();
+            if (didDrag) notifyRotationEnd();
         }
     });
 
@@ -188,6 +195,7 @@ export function initControls() {
     window.addEventListener('touchend', (e) => {
         if (state.isDragging) {
             state.isDragging = false;
+            const didDrag = hasDragged;
 
             // Na telefonie po zakończeniu obrotu zerujemy dotyk – palec został odjęty od ekranu!
             // Dzięki temu mieszkanie pod palcem NIE podświetli się po puszczeniu obrotu.
@@ -197,6 +205,7 @@ export function initControls() {
             }
 
             drawScene();
+            if (didDrag) notifyRotationEnd();
         }
     });
     
