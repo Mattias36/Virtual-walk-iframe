@@ -146,7 +146,6 @@ export function resetHighResState() {
 
 export function drawScene() {
     if (state.currentMode === 'walk') return;
-
     // Bezpieczne sprowadzenie do indeksu 0..119
     const safeFrame = ((state.currentFrame % state.totalFrames) + state.totalFrames) % state.totalFrames;
 
@@ -325,8 +324,30 @@ export function drawScene() {
     renderHighlights(targetR, targetG, targetB, targetStatus);
 }
 
+export function replayHighlightAnimation() {
+    if ((!state.showAllStatuses && !state.selectedApartment) || !highlightCanvas) return;
+
+    const animationId = ++highlightAnimationId;
+    highlightCanvas.style.animation = 'none';
+    highlightCanvas.style.opacity = '0';
+    highlightCanvas.classList.remove('active');
+    highlightCtx?.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
+
+    requestAnimationFrame(() => {
+        if (animationId !== highlightAnimationId) return;
+        drawScene();
+
+        requestAnimationFrame(() => {
+            if (animationId !== highlightAnimationId) return;
+            highlightCanvas.style.animation = 'status-highlight-reveal 0.6s ease both';
+            highlightCanvas.style.opacity = '';
+        });
+    });
+}
+
 let cachedLegendFrame = null;
 let cachedLegendImageData = null;
+let highlightAnimationId = 0;
 
 function renderHighlights(targetR, targetG, targetB, targetStatus) {
     if (state.currentMode === 'walk' || state.isAnimating || state.viewType === 'far') {
@@ -472,4 +493,9 @@ export function getApartmentCenterCoords(apartment) {
         x: offsetX + (avgX / canvas.width) * renderWidth,
         y: offsetY + (avgY / canvas.height) * renderHeight
     };
+}
+
+export function replayLegendAnimation() {
+    if (!state.showAllStatuses) return;
+    replayHighlightAnimation();
 }

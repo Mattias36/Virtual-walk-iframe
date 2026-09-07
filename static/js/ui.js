@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { drawScene, getApartmentCenterCoords } from './renderer.js';
+import { drawScene, getApartmentCenterCoords, replayHighlightAnimation, replayLegendAnimation } from './renderer.js';
 import { rotateToDirection } from './controls.js';
 
 const tooltip = document.getElementById('apartment-tooltip');
@@ -112,8 +112,14 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     state.selectedApartment = data;
     state.hoveredApartment = data;
 
-    // OD RAZU PRZERYSOWUJEMY SCENĘ – żeby podświetlenie błyskawicznie pojawiło się na makiecie
-    if (typeof drawScene === 'function') drawScene();
+    // Przy automatycznej rotacji animacja startuje dopiero po jej zakończeniu.
+    if (!shouldRotate) {
+        if (typeof replayHighlightAnimation === 'function') {
+            replayHighlightAnimation();
+        } else if (typeof drawScene === 'function') {
+            drawScene();
+        }
+    }
 
     // --- AUTOROTACJA MAKIETY ---
     if (shouldRotate) {
@@ -306,7 +312,11 @@ export function toggleLegend() {
         legendBox.classList.toggle('hidden', !state.showAllStatuses);
     }
 
-    drawScene();
+    if (state.showAllStatuses) {
+        replayLegendAnimation();
+    } else {
+        drawScene();
+    }
 
     if (!state.showAllStatuses && state.selectedApartment) {
         showApartmentTooltipAtCenter(state.selectedApartment);

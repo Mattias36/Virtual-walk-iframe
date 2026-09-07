@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { updateFrames, drawScene, resetHighResState } from './renderer.js';
+import { updateFrames, drawScene, replayHighlightAnimation, resetHighResState } from './renderer.js';
 import { toggleSidebar, selectApartment } from './ui.js';
 
 const container = document.getElementById('container-360');
@@ -31,6 +31,8 @@ export function rotateToDirection(targetFrame) {
 
     if (highlightCanvas && highlightCtx) {
         highlightCanvas.style.transition = 'none';
+        highlightCanvas.style.animation = 'none';
+        highlightCanvas.style.opacity = '0';
         highlightCtx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
         highlightCanvas.className = '';
         void highlightCanvas.offsetHeight;
@@ -55,7 +57,11 @@ export function rotateToDirection(targetFrame) {
                 highlightCanvas.style.transition = '';
             }
 
-            drawScene();
+            if (state.showAllStatuses || state.selectedApartment) {
+                replayHighlightAnimation();
+            } else {
+                drawScene();
+            }
             notifyRotationEnd();
             return;
         }
@@ -128,7 +134,11 @@ export function initControls() {
                 state.mouseY = -1;
             }
             
-            drawScene();
+            if (state.showAllStatuses || state.selectedApartment) {
+                replayHighlightAnimation();
+            } else {
+                drawScene();
+            }
             if (didDrag) notifyRotationEnd();
         }
     });
@@ -204,7 +214,11 @@ export function initControls() {
                 state.mouseY = -1;
             }
 
-            drawScene();
+            if (state.showAllStatuses || state.selectedApartment) {
+                replayHighlightAnimation();
+            } else {
+                drawScene();
+            }
             if (didDrag) notifyRotationEnd();
         }
     });
