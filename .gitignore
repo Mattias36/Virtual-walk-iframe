@@ -4,7 +4,7 @@ node_modules/
 # Ciężkie zasoby graficzne i dane inwestycji
 static/MovieRenders/
 static/panoramy_jpg/
-mieszkania.xlsx
+
 
 # Pliki konfiguracyjne i lokalne
 *.json

@@ -53,7 +53,7 @@ export async function loadApartmentsFromExcel() {
 }
 
 // export async function loadApartmentsFromExcel() {
-//     // Resetuj do danych domyślnych na start
+// //     // Resetuj do danych domyślnych na start
 //     state.colorLinks = typeof defaultColorLinks !== 'undefined' ? [...defaultColorLinks] : [];
 
 //     // 1. TRYB NW.JS / ELEKTRON (PLIK .EXE)
