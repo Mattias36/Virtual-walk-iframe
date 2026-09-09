@@ -17,97 +17,11 @@ export const defaultColorLinks = [
     { id: 'blok-fioletowy-2', name: 'Mieszkanie 108/2', r: 96, g: 189, b: 62, url: 'https://twojastrona.pl/blok-fioletowy-2', size: 35.0, rooms: 2, price: '330 100', status: 'Rezerwacja' }
 ];
 
-export async function loadApartmentsFromExcel() {
-    state.colorLinks = [...defaultColorLinks];
-    try {
-        const response = await fetch('./mieszkania.xlsx?v=' + new Date().getTime());
-        if (!response.ok) throw new Error("Brak pliku mieszkania.xlsx, używam danych domyślnych.");
-
-        const arrayBuffer = await response.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawData = XLSX.utils.sheet_to_json(worksheet);
-
-        if (rawData && rawData.length > 0) {
-            state.colorLinks = rawData.map(row => ({
-                id: String(row.id).trim(),
-                name: String(row.name).trim(),
-                r: parseInt(row.r),
-                g: parseInt(row.g),
-                b: parseInt(row.b),
-                url: String(row.url).trim(),
-                size: parseFloat(row.size),
-                rooms: parseInt(row.rooms),
-                price: String(row.price).trim(),
-                status: String(row.status).trim(),
-                frame: row.frame !== undefined ? parseInt(row.frame) : undefined
-            }));
-            console.log("Pomyślnie wczytano bazę z pliku mieszkania.xlsx!");
-        }
-    } catch (err) {
-        console.warn(err.message);
-    } finally {
-        renderApartmentList();
-    }
-}
-
 // export async function loadApartmentsFromExcel() {
-// //     // Resetuj do danych domyślnych na start
-//     state.colorLinks = typeof defaultColorLinks !== 'undefined' ? [...defaultColorLinks] : [];
-
-//     // 1. TRYB NW.JS / ELEKTRON (PLIK .EXE)
+//     state.colorLinks = [...defaultColorLinks];
 //     try {
-//         if (typeof require !== 'undefined') {
-//             const fs = require('fs');
-//             const path = require('path');
-
-//             // Lokalizacja pliku .exe
-//             const exeDir = path.dirname(process.execPath);
-//             const exeExcelPath = path.join(exeDir, 'mieszkania.xlsx');
-
-//             // Fallback dla NW.js (katalog projektu/rozpakowany)
-//             const devExcelPath = path.join(process.cwd(), 'mieszkania.xlsx');
-
-//             const finalPath = fs.existsSync(exeExcelPath) ? exeExcelPath : (fs.existsSync(devExcelPath) ? devExcelPath : null);
-
-//             if (finalPath) {
-//                 console.log("[NW.js] Wczytuję plik Excel z:", finalPath);
-//                 const fileBuffer = fs.readFileSync(finalPath);
-                
-//                 const workbook = XLSX.read(fileBuffer, { type: 'buffer' });
-//                 const firstSheetName = workbook.SheetNames[0];
-//                 const worksheet = workbook.Sheets[firstSheetName];
-//                 const rawData = XLSX.utils.sheet_to_json(worksheet);
-
-//                 if (rawData && rawData.length > 0) {
-//                     state.colorLinks = rawData.map(row => ({
-//                         id: String(row.id).trim(),
-//                         name: String(row.name).trim(),
-//                         r: parseInt(row.r),
-//                         g: parseInt(row.g),
-//                         b: parseInt(row.b),
-//                         url: String(row.url).trim(),
-//                         size: parseFloat(row.size),
-//                         rooms: parseInt(row.rooms),
-//                         price: String(row.price).trim(),
-//                         status: String(row.status).trim(),
-//                         frame: row.frame !== undefined ? parseInt(row.frame) : undefined
-//                     }));
-//                     console.log("[NW.js] Pomyślnie załadowano dane z pliku Excel!");
-//                 }
-//                 renderApartmentList();
-//                 return;
-//             }
-//         }
-//     } catch (err) {
-//         console.warn("[NW.js] Nie udało się odczytać pliku przez FS:", err);
-//     }
-
-//     // 2. TRYB PRZEGLĄDARKI / LIVE SERVER (FALLBACK HTTP)
-//     try {
-//         const response = await fetch('./mieszkania.xlsx?v=' + Date.now());
-//         if (!response.ok) throw new Error("Brak pliku mieszkania.xlsx na serwerze.");
+//         const response = await fetch('./mieszkania.xlsx?v=' + new Date().getTime());
+//         if (!response.ok) throw new Error("Brak pliku mieszkania.xlsx, używam danych domyślnych.");
 
 //         const arrayBuffer = await response.arrayBuffer();
 //         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
@@ -129,11 +43,97 @@ export async function loadApartmentsFromExcel() {
 //                 status: String(row.status).trim(),
 //                 frame: row.frame !== undefined ? parseInt(row.frame) : undefined
 //             }));
-//             console.log("[Fetch] Pomyślnie załadowano dane z pliku Excel!");
+//             console.log("Pomyślnie wczytano bazę z pliku mieszkania.xlsx!");
 //         }
 //     } catch (err) {
-//         console.warn("[Fetch]", err.message);
+//         console.warn(err.message);
 //     } finally {
 //         renderApartmentList();
 //     }
-// } 
+// }
+
+export async function loadApartmentsFromExcel() {
+    //Resetuj do danych domyślnych na start
+    state.colorLinks = typeof defaultColorLinks !== 'undefined' ? [...defaultColorLinks] : [];
+
+    // 1. TRYB NW.JS / ELEKTRON (PLIK .EXE)
+    try {
+        if (typeof require !== 'undefined') {
+            const fs = require('fs');
+            const path = require('path');
+
+            // Lokalizacja pliku .exe
+            const exeDir = path.dirname(process.execPath);
+            const exeExcelPath = path.join(exeDir, 'mieszkania.xlsx');
+
+            // Fallback dla NW.js (katalog projektu/rozpakowany)
+            const devExcelPath = path.join(process.cwd(), 'mieszkania.xlsx');
+
+            const finalPath = fs.existsSync(exeExcelPath) ? exeExcelPath : (fs.existsSync(devExcelPath) ? devExcelPath : null);
+
+            if (finalPath) {
+                console.log("[NW.js] Wczytuję plik Excel z:", finalPath);
+                const fileBuffer = fs.readFileSync(finalPath);
+                
+                const workbook = XLSX.read(fileBuffer, { type: 'buffer' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+                if (rawData && rawData.length > 0) {
+                    state.colorLinks = rawData.map(row => ({
+                        id: String(row.id).trim(),
+                        name: String(row.name).trim(),
+                        r: parseInt(row.r),
+                        g: parseInt(row.g),
+                        b: parseInt(row.b),
+                        url: String(row.url).trim(),
+                        size: parseFloat(row.size),
+                        rooms: parseInt(row.rooms),
+                        price: String(row.price).trim(),
+                        status: String(row.status).trim(),
+                        frame: row.frame !== undefined ? parseInt(row.frame) : undefined
+                    }));
+                    console.log("[NW.js] Pomyślnie załadowano dane z pliku Excel!");
+                }
+                renderApartmentList();
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn("[NW.js] Nie udało się odczytać pliku przez FS:", err);
+    }
+
+    // 2. TRYB PRZEGLĄDARKI / LIVE SERVER (FALLBACK HTTP)
+    try {
+        const response = await fetch('./mieszkania.xlsx?v=' + Date.now());
+        if (!response.ok) throw new Error("Brak pliku mieszkania.xlsx na serwerze.");
+
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (rawData && rawData.length > 0) {
+            state.colorLinks = rawData.map(row => ({
+                id: String(row.id).trim(),
+                name: String(row.name).trim(),
+                r: parseInt(row.r),
+                g: parseInt(row.g),
+                b: parseInt(row.b),
+                url: String(row.url).trim(),
+                size: parseFloat(row.size),
+                rooms: parseInt(row.rooms),
+                price: String(row.price).trim(),
+                status: String(row.status).trim(),
+                frame: row.frame !== undefined ? parseInt(row.frame) : undefined
+            }));
+            console.log("[Fetch] Pomyślnie załadowano dane z pliku Excel!");
+        }
+    } catch (err) {
+        console.warn("[Fetch]", err.message);
+    } finally {
+        renderApartmentList();
+    }
+} 
