@@ -219,7 +219,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
     border-radius: clamp(6px, 0.6vw, 12px);
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
-    border-left: 3px solid transparent;
+    /* border-left: 3px solid transparent; */
 }
 
 .apartment-item.active {
@@ -331,7 +331,7 @@ body:not(.touch-device) #info-link-btn:hover,
     font-size: clamp(11px, 0.85vw, 17px);
     border-radius: 50px;
 
-    background: rgba(0, 0, 0, 0.65);
+    background: #1111118f;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--primary-color, #ff9500);
