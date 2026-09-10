@@ -26,6 +26,21 @@
         <!-- WIDOK 1: MAKIETA 3D / NAWIGATOR (DOMYŚLNY)                          -->
         <!-- =================================================================== -->
         <div id="container-360">
+            <div id="apartment-panel" class="hidden" aria-hidden="true">
+                <div class="apartment-panel-shell">
+                    <div class="apartment-panel-header">
+                        <button id="apartment-panel-back" class="apartment-panel-back" type="button" onclick="closeApartmentPanel()" title="Powrót do widoku głównego">
+                            <span aria-hidden="true">←</span>
+                            <span>Powrót</span>
+                        </button>
+                        <div id="apartment-panel-title" class="apartment-panel-title">Karta lokalu</div>
+                    </div>
+                    <div class="apartment-panel-body">
+                        <iframe id="apartment-pdf-frame" title="Karta lokalu" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+
             <div id="canvas-wrapper">
                 <canvas id="main-canvas"></canvas>
 

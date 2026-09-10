@@ -6,6 +6,10 @@ const container = document.getElementById('container-360');
 const colorIdDisplay = document.getElementById('color-id');
 const tooltip = document.getElementById('apartment-tooltip');
 
+function isApartmentPanelOpen() {
+    return document.body.classList.contains('apartment-panel-open');
+}
+
 function notifyRotationEnd() {
     window.dispatchEvent(new CustomEvent('apartment-rotation-end'));
 }
@@ -18,6 +22,7 @@ let dragStartY = 0;
 // [USUNIĘTO]: Cały luźny `container.addEventListener('click', ...)` z tego miejsca!
 
 export function rotateToDirection(targetFrame) {
+    if (isApartmentPanelOpen()) return;
     if (state.isAnimating || state.isDragging) return;
 
     if (tooltip) tooltip.classList.add('hidden');
@@ -114,6 +119,7 @@ export function initControls() {
     });
 
     container.addEventListener('mousedown', (e) => {
+        if (isApartmentPanelOpen()) return;
         if (state.isAnimating) return;
         state.isDragging = true;
         hasDragged = false;
@@ -149,6 +155,11 @@ export function initControls() {
     });
 
     window.addEventListener('mousemove', (e) => {
+        if (isApartmentPanelOpen()) {
+            state.isDragging = false;
+            return;
+        }
+
         state.mouseX = e.clientX;
         state.mouseY = e.clientY;
 
@@ -166,6 +177,8 @@ export function initControls() {
 
     // JEDYNE I PRAWIDŁOWE MIEJSCE OBSŁUGI KLIKNIĘCIA
     container.addEventListener('click', (e) => {
+        if (isApartmentPanelOpen()) return;
+
         if (hasDragged || state.isAnimating) {
             hasDragged = false;
             return;
@@ -187,6 +200,7 @@ export function initControls() {
     let touchStartY = 0;
 
     container.addEventListener('touchstart', (e) => {
+        if (isApartmentPanelOpen()) return;
         if (state.isAnimating) return;
         state.isDragging = true;
         hasDragged = false;

@@ -18,11 +18,53 @@ window.toggleLegend = toggleLegend;
 window.toggleViewType = toggleViewType; // 2. WYSTAWIENIE DO WINDOW
 window.state = state
 
-window.goToApartmentUrl = function() {
-    if (state.selectedApartment && state.selectedApartment.url) {
-        window.location.href = state.selectedApartment.url;
+function openApartmentPanel() {
+    const apartment = state.selectedApartment;
+    const panel = document.getElementById('apartment-panel');
+    const iframe = document.getElementById('apartment-pdf-frame');
+    const title = document.getElementById('apartment-panel-title');
+
+    if (!apartment || !apartment.url || !panel || !iframe || !title) {
+        return;
     }
+
+    title.textContent = apartment.name || 'Karta lokalu';
+    iframe.src = apartment.url + '#toolbar=0';
+
+    requestAnimationFrame(() => {
+        panel.classList.remove('hidden');
+        document.body.classList.add('apartment-panel-open');
+    });
+}
+
+function closeApartmentPanel() {
+    const panel = document.getElementById('apartment-panel');
+    const iframe = document.getElementById('apartment-pdf-frame');
+
+    if (panel) {
+        panel.classList.add('hidden');
+    }
+
+    if (iframe) {
+        iframe.src = '';
+    }
+
+    document.body.classList.remove('apartment-panel-open');
+}
+
+window.goToApartmentUrl = function() {
+    openApartmentPanel();
 };
+window.closeApartmentPanel = closeApartmentPanel;
+
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const panel = document.getElementById('apartment-panel');
+        if (panel && !panel.classList.contains('hidden')) {
+            closeApartmentPanel();
+        }
+    }
+});
 
 // ==========================================================================
 // INICJALIZACJA APLIKACJI
