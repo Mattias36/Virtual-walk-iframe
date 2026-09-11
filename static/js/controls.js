@@ -278,39 +278,102 @@ export function initControls() {
     initFullscreen();
 }
 
-function initFullscreen() {
-    const btnFullscreen = document.getElementById('btn-fullscreen');
-    const container360 = document.getElementById('container-360');
+function getFullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+}
 
-    if (!btnFullscreen || !container360) return;
+function exitFullscreenIfNeeded() {
+    const activeFullscreen = getFullscreenElement();
+    if (!activeFullscreen) return;
 
-    btnFullscreen.addEventListener('click', (e) => {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+    else if (document.msExitFullscreen) document.msExitFullscreen();
+}
+
+function requestFullscreenFor(container) {
+    if (!container) return;
+
+    if (container.requestFullscreen) container.requestFullscreen();
+    else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+    else if (container.msRequestFullscreen) container.msRequestFullscreen();
+}
+
+function getFullscreenRoot() {
+    return document.documentElement || document.body;
+}
+
+function syncFullscreenToTarget() {
+    const fullscreenRoot = getFullscreenRoot();
+    const activeFullscreen = getFullscreenElement();
+
+    if (!fullscreenRoot || !activeFullscreen) {
+        return;
+    }
+
+    if (activeFullscreen === fullscreenRoot) {
+        return;
+    }
+
+    // W przypadku przełączania widoków w trybie fullscreen zachowujemy
+    // aktywny stan pełnego ekranu na elemencie dokumentu, a stylowanie
+    // przekazujemy do aktualnie widocznego kontenera.
+    return;
+}
+
+function updateFullscreenButtonIcon(button) {
+    if (!button) return;
+
+    const iconEnter = button.querySelector('.icon-fullscreen-enter');
+    const iconExit = button.querySelector('.icon-fullscreen-exit');
+    const isFullscreen = !!getFullscreenElement();
+
+    if (iconEnter) iconEnter.classList.toggle('hidden', isFullscreen);
+    if (iconExit) iconExit.classList.toggle('hidden', !isFullscreen);
+}
+
+function bindFullscreenButton(button, container) {
+    if (!button) return;
+
+    const fullscreenRoot = getFullscreenRoot();
+    const targetContainer = container || fullscreenRoot;
+
+    button.addEventListener('click', (e) => {
         e.stopPropagation();
 
-        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            if (container360.requestFullscreen) container360.requestFullscreen();
-            else if (container360.webkitRequestFullscreen) container360.webkitRequestFullscreen();
-            else if (container360.msRequestFullscreen) container360.msRequestFullscreen();
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
+        const activeFullscreen = getFullscreenElement();
+
+        if (activeFullscreen === fullscreenRoot) {
+            exitFullscreenIfNeeded();
+            return;
         }
+
+        if (activeFullscreen) {
+            exitFullscreenIfNeeded();
+        }
+
+        requestAnimationFrame(() => {
+            requestFullscreenFor(fullscreenRoot || targetContainer);
+        });
     });
 
+    button.addEventListener('mousedown', (e) => e.stopPropagation());
+    button.addEventListener('mouseup', (e) => e.stopPropagation());
+}
+
+function initFullscreen() {
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const btnFullscreenWalk = document.getElementById('btn-fullscreen-walk');
+    const container360 = document.getElementById('container-360');
+    const containerWalk = document.getElementById('container-walk');
+
+    if (btnFullscreen) bindFullscreenButton(btnFullscreen, container360);
+    if (btnFullscreenWalk) bindFullscreenButton(btnFullscreenWalk, containerWalk);
+
     const handleFullscreenChange = () => {
-        const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-        const iconEnter = btnFullscreen.querySelector('.icon-fullscreen-enter');
-        const iconExit = btnFullscreen.querySelector('.icon-fullscreen-exit');
-
-        if (isFullscreen) {
-            if (iconEnter) iconEnter.classList.add('hidden');
-            if (iconExit) iconExit.classList.remove('hidden');
-        } else {
-            if (iconEnter) iconEnter.classList.remove('hidden');
-            if (iconExit) iconExit.classList.add('hidden');
-        }
-
+        updateFullscreenButtonIcon(document.getElementById('btn-fullscreen'));
+        updateFullscreenButtonIcon(document.getElementById('btn-fullscreen-walk'));
         setTimeout(() => drawScene(), 150);
     };
 
@@ -318,22 +381,12 @@ function initFullscreen() {
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
     document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-    btnFullscreen.addEventListener('mousedown', (e) => e.stopPropagation());
-    btnFullscreen.addEventListener('mouseup', (e) => e.stopPropagation());
 }
 
 export function switchMode(mode) {
     console.log("Przełączanie trybu na: ", mode);
 
     state.currentMode = mode;
-
-    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-        if (document.exitFullscreen) document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-        else if (document.msExitFullscreen) document.msExitFullscreen();
-    }
 
     const containerMakieta = document.getElementById('container-360');
     const containerWalk = document.getElementById('container-walk');
@@ -365,6 +418,10 @@ export function switchMode(mode) {
         if (containerMakieta) containerMakieta.classList.add('hidden');
         if (containerWalk) containerWalk.classList.remove('hidden');
 
+        if (getFullscreenElement()) {
+            syncFullscreenToTarget();
+        }
+
         setTimeout(() => {
             if (typeof initPanorama === 'function') {
                 initPanorama();
@@ -374,6 +431,10 @@ export function switchMode(mode) {
     } else if (mode === 'makieta') {
         if (containerWalk) containerWalk.classList.add('hidden');
         if (containerMakieta) containerMakieta.classList.remove('hidden');
+
+        if (getFullscreenElement()) {
+            syncFullscreenToTarget();
+        }
 
         if (legendBox) legendBox.classList.add('hidden');
         if (statusBtn) statusBtn.classList.remove('active');

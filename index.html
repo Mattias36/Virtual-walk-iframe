@@ -147,8 +147,9 @@
         <!-- WIDOK 2: WIRTUALNY SPACER PANORAMA (UKRYTY DOMYŚLNIE)                -->
         <!-- =================================================================== -->
         <div id="container-walk" class="hidden">
-            <div id="panorama-viewer">
-                <!-- Przycisk przeniesiony do wnętrza kontenera panoramy -->
+            <div id="panorama-viewer"></div>
+
+            <div id="walk-view-toolbar">
                 <button id="btn-back-to-makieta" onclick="switchMode('makieta')" title="Powrót do widoku 3D">
                     <svg class="icon-back" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                         style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
@@ -156,6 +157,19 @@
                         <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
                     Powrót do widoku 3D
+                </button>
+
+                <button id="btn-fullscreen-walk" class="walk-fullscreen-btn" type="button" title="Pełny ekran">
+                    <svg class="icon-fullscreen-enter" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <svg class="icon-fullscreen-exit hidden" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 10h-6V4M4 14h6v6M14 10l7-7M10 14l-7 7" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                 </button>
             </div>
         </div>

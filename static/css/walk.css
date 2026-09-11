@@ -39,12 +39,28 @@
     font-family: inherit;
 }
 
-#btn-back-to-makieta {
+#walk-view-toolbar {
     position: absolute;
-    bottom: clamp(10px, 2%, 20px);
     left: 50%;
+    bottom: clamp(10px, 2%, 20px);
     transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 0.7vw, 16px);
+    z-index: 99999 !important;
+    pointer-events: auto;
+}
 
+#container-walk .pnlm-fullscreen-toggle-button {
+    display: none !important;
+}
+
+#btn-back-to-makieta {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
     height: clamp(36px, 3vw, 56px);
     padding: 0 clamp(12px, 1vw, 24px);
 
@@ -56,9 +72,6 @@
     color: #fff;
     font-weight: 600;
     font-size: clamp(11px, 0.85vw, 17px);
-
-    /* KLUCZOWA ZMIANA: Zwiększony z-index, aby przycisk był nad elementami Pannellum w fullscreenie */
-    z-index: 99999 !important;
 
     display: flex;
     align-items: center;
@@ -77,11 +90,50 @@ body:not(.touch-device) #btn-back-to-makieta:hover,
     background: var(--primary-color, #ff9500);
     color: #000;
     box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.6);
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateY(-2px);
 }
 
 #btn-back-to-makieta:active {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
+}
+
+#btn-fullscreen-walk {
+    position: relative;
+    padding: 0 !important;
+    width: clamp(36px, 3vw, 56px) !important;
+    height: clamp(36px, 3vw, 56px) !important;
+    min-width: clamp(36px, 3vw, 56px) !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1;
+    background: rgba(17, 17, 17, 0.56);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--primary-color, #ff9500) !important;
+    color: #fff;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.08);
+}
+
+#btn-fullscreen-walk svg {
+    width: clamp(16px, 1.2vw, 24px) !important;
+    height: clamp(16px, 1.2vw, 24px) !important;
+    transition: transform 0.2s ease;
+}
+
+body:not(.touch-device) #btn-fullscreen-walk:hover,
+#btn-fullscreen-walk.touch-active {
+    background: var(--primary-color, #ff9500);
+    border-color: var(--primary-color, #ff9500) !important;
+    color: #000;
+    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.5);
+}
+
+#btn-fullscreen-walk:active {
+    transform: scale(0.96);
 }
 
 .icon-back {

@@ -30,9 +30,14 @@ async function initPanorama() {
         return;
     }
 
-    // ==========================================================================
-    // UPEWNIAMY SIĘ, ŻE PRZYCISK ISTNIEJE (ZABEZPIECZENIE PRZED viewer.destroy())
-    // ==========================================================================
+    const walkToolbar = document.getElementById('walk-view-toolbar') || (() => {
+        const toolbar = document.createElement('div');
+        toolbar.id = 'walk-view-toolbar';
+        toolbar.className = 'walk-view-toolbar';
+        document.getElementById('container-walk')?.appendChild(toolbar);
+        return toolbar;
+    })();
+
     let backBtn = document.getElementById('btn-back-to-makieta');
     if (!backBtn) {
         backBtn = document.createElement('button');
@@ -47,7 +52,14 @@ async function initPanorama() {
             </svg>
             Powrót do widoku 3D
         `;
-        viewerElement.appendChild(backBtn);
+        walkToolbar.appendChild(backBtn);
+    } else if (backBtn.parentNode !== walkToolbar) {
+        walkToolbar.appendChild(backBtn);
+    }
+
+    const fullscreenWalkBtn = document.getElementById('btn-fullscreen-walk');
+    if (fullscreenWalkBtn && fullscreenWalkBtn.parentNode !== walkToolbar) {
+        walkToolbar.appendChild(fullscreenWalkBtn);
     }
 
     // Funkcja pobierająca obraz w tle i zamieniająca go na Blob URL
@@ -358,9 +370,19 @@ async function initPanorama() {
             }
         });
 
-        // PO ZAINICJOWANIU PANNELLUM: Upewniamy się, że przycisk jest na samej górze w DOM
-        if (backBtn && viewerElement.contains(backBtn)) {
-            viewerElement.appendChild(backBtn);
+        // PO ZAINICJOWANIU PANNELLUM: Upewniamy się, że przyciski pozostają w toolbarze, a nie są wstrzykiwane do DOM Pannellum
+        const walkToolbar = document.getElementById('walk-view-toolbar');
+        if (walkToolbar) {
+            const walkBackBtn = document.getElementById('btn-back-to-makieta');
+            const walkFullscreenBtn = document.getElementById('btn-fullscreen-walk');
+
+            if (walkBackBtn && walkBackBtn.parentNode !== walkToolbar) {
+                walkToolbar.appendChild(walkBackBtn);
+            }
+
+            if (walkFullscreenBtn && walkFullscreenBtn.parentNode !== walkToolbar) {
+                walkToolbar.appendChild(walkFullscreenBtn);
+            }
         }
 
         window.viewer.on('scenechange', function (targetSceneId) {
