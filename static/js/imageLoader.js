@@ -32,7 +32,7 @@ export async function preloadAllFrames() {
 
         for (let j = i; j < i + BATCH_SIZE && j < state.totalFrames; j++) {
             const frameStr = padNumber(j);
-            const pathBuilding = `./static/MovieRenders/zdjecia_fhd/NewLevelSequence.${frameStr}.jpeg`;
+            const pathBuilding = `./static/MovieRenders/zdjecia_fhd/NewLevelSequence.${frameStr}.jpg`;
             const pathMask = `./static/MovieRenders/Maski/Maski_rendery.${frameStr}.png`;
 
             const bPromise = loadImage(pathBuilding, () => state.loadedBuildingCount++)
@@ -66,7 +66,7 @@ export async function preloadFarFrames() {
             // Zamiana indexu 0..119 na numery plików 120..239
             const fileNumber = j + 120;
             const frameStr = padNumber(fileNumber);
-            const pathFar = `./static/MovieRenders/zdjecia_fhd_z_daleka/NewLevelSequence.${frameStr}.jpeg`;
+            const pathFar = `./static/MovieRenders/zdjecia_fhd_z_daleka/NewLevelSequence.${frameStr}.jpg`;
 
             const fPromise = loadImage(pathFar, () => state.loadedFarCount++)
                 .then(img => { state.imagesFarCache[j] = img; });
