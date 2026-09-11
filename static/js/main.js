@@ -94,27 +94,56 @@ if (document.readyState === 'loading') {
     initApp();
 }
 
+function bindTouchFeedback(element) {
+    if (!element || element.dataset.touchFeedbackBound === 'true') {
+        return;
+    }
+
+    element.dataset.touchFeedbackBound = 'true';
+    let feedbackTimeout;
+
+    element.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'touch') return;
+
+        document.body.classList.add('touch-device');
+        clearTimeout(feedbackTimeout);
+        element.classList.add('touch-active');
+    });
+
+    const clearFeedback = () => {
+        clearTimeout(feedbackTimeout);
+        feedbackTimeout = setTimeout(() => {
+            element.classList.remove('touch-active');
+            if (typeof element.blur === 'function') {
+                element.blur();
+            }
+        }, 180);
+    };
+
+    element.addEventListener('pointerup', clearFeedback);
+    element.addEventListener('pointercancel', clearFeedback);
+    element.addEventListener('click', clearFeedback);
+    element.addEventListener('pointerleave', () => {
+        clearTimeout(feedbackTimeout);
+        element.classList.remove('touch-active');
+    });
+}
+
 function initTouchButtonFeedback() {
-    document.querySelectorAll('button').forEach(button => {
-        let feedbackTimeout;
+    const selector = 'button, .pnlm-zoom-in, .pnlm-zoom-out, .pnlm-fullscreen-toggle-button, .pnlm-hotspot-base.pnlm-scene';
 
-        button.addEventListener('pointerdown', event => {
-            if (event.pointerType !== 'touch') return;
+    const attachExisting = () => {
+        document.querySelectorAll(selector).forEach(bindTouchFeedback);
+    };
 
-            document.body.classList.add('touch-device');
-            clearTimeout(feedbackTimeout);
-            button.classList.add('touch-active');
-        });
+    attachExisting();
 
-        const clearFeedback = () => {
-            clearTimeout(feedbackTimeout);
-            feedbackTimeout = setTimeout(() => {
-                button.classList.remove('touch-active');
-                button.blur();
-            }, 180);
-        };
+    const observer = new MutationObserver(() => {
+        attachExisting();
+    });
 
-        button.addEventListener('pointerup', clearFeedback);
-        button.addEventListener('pointercancel', clearFeedback);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
     });
 }

@@ -252,9 +252,12 @@ body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
     display: none !important;
 }
 
-.pnlm-zoom-in:hover,
-.pnlm-zoom-out:hover,
-.pnlm-fullscreen-toggle-button:hover {
+body:not(.touch-device) .pnlm-zoom-in:hover,
+body:not(.touch-device) .pnlm-zoom-out:hover,
+body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover,
+.pnlm-zoom-in.touch-active,
+.pnlm-zoom-out.touch-active,
+.pnlm-fullscreen-toggle-button.touch-active {
     background-color: var(--primary-color, #ff9500) !important;
     border-color: var(--primary-color, #ff9500) !important;
     box-shadow: 0 8px 32px rgba(255, 149, 0, 0.25), 0 0 15px rgba(255, 149, 0, 0.5) !important;
@@ -288,9 +291,12 @@ body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5'/%3E%3C/svg%3E") !important;
 }
 
-.pnlm-zoom-in:hover::before,
-.pnlm-zoom-out:hover::before,
-.pnlm-fullscreen-toggle-button:hover::before {
+body:not(.touch-device) .pnlm-zoom-in:hover::before,
+body:not(.touch-device) .pnlm-zoom-out:hover::before,
+body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover::before,
+.pnlm-zoom-in.touch-active::before,
+.pnlm-zoom-out.touch-active::before,
+.pnlm-fullscreen-toggle-button.touch-active::before {
     filter: brightness(0);
 }
 
@@ -327,7 +333,8 @@ body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
     background-repeat: no-repeat !important;
 }
 
-.pnlm-hotspot-base.pnlm-scene:hover {
+body:not(.touch-device) .pnlm-hotspot-base.pnlm-scene:hover,
+.pnlm-hotspot-base.pnlm-scene.touch-active {
     background-color: rgba(60, 60, 60, 0.484) !important;
     border-color: #ff9500 !important; 
     transform: scale(1.1);
@@ -335,7 +342,8 @@ body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9500' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
 }
 
-.pnlm-hotspot-base.pnlm-scene:active {
+.pnlm-hotspot-base.pnlm-scene:active,
+.pnlm-hotspot-base.pnlm-scene.touch-active {
     transform: scale(0.95);
 }
 
