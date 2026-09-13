@@ -33,7 +33,7 @@
 
 /* Reset stylów dla elementów typu button, które udają stare linki <a> */
 #btn-virtual-walk, #btn-back-to-makieta {
-    border: 1px solid var(--primary-color, #ff9500);
+    border: 1px solid var(--primary-color, #024628);
     outline: none;
     cursor: pointer;
     font-family: inherit;
@@ -64,20 +64,20 @@
     height: clamp(36px, 3vw, 56px);
     padding: 0 clamp(12px, 1vw, 24px);
 
-    background: rgba(17, 17, 17, 0.56);
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #ff9500);
+    border: 1px solid var(--primary-color, #045428b2);
     border-radius: 50px;
     color: #fff;
-    font-weight: 600;
+    font-weight: 500;
     font-size: clamp(11px, 0.85vw, 17px);
 
     display: flex;
     align-items: center;
     justify-content: center;
     gap: clamp(6px, 0.5vw, 10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(2, 79, 38, 0.286);
     transition: var(--transition-smooth, all 0.3s ease);
     white-space: nowrap;
     box-sizing: border-box;
@@ -87,9 +87,9 @@
 
 body:not(.touch-device) #btn-back-to-makieta:hover,
 #btn-back-to-makieta.touch-active {
-    background: var(--primary-color, #ff9500);
-    color: #000;
-    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.6);
+    background: var(--primary-color, #036232ad);
+
+    box-shadow: 0 8px 32px rgba(2, 80, 45, 0.3), 0 0 15px #036232ad;
     transform: translateY(-2px);
 }
 
@@ -105,17 +105,17 @@ body:not(.touch-device) #btn-back-to-makieta:hover,
     min-width: clamp(36px, 3vw, 56px) !important;
     border-radius: 50% !important;
     aspect-ratio: 1 / 1;
-    background: rgba(17, 17, 17, 0.56);
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #ff9500) !important;
+    border: 1px solid var(--primary-color, #03552858) !important;
     color: #fff;
     display: flex !important;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(2, 79, 38, 0.286);
 }
 
 #btn-fullscreen-walk svg {
@@ -126,10 +126,9 @@ body:not(.touch-device) #btn-back-to-makieta:hover,
 
 body:not(.touch-device) #btn-fullscreen-walk:hover,
 #btn-fullscreen-walk.touch-active {
-    background: var(--primary-color, #ff9500);
-    border-color: var(--primary-color, #ff9500) !important;
-    color: #000;
-    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.5);
+    background: var(--primary-color, #03552858);
+    border-color: var(--primary-color, #03552858) !important;
+    box-shadow: 0 8px 32px rgba(2, 80, 45, 0.3), 0 0 15px #036232ad;
 }
 
 #btn-fullscreen-walk:active {
@@ -250,9 +249,9 @@ body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
     min-width: 38px !important;
     min-height: 38px !important;
     border-radius: 50% !important;
-    background-color: rgba(17, 17, 17, 0.56) !important;
-    border: 1px solid var(--primary-color, #ff9500) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.08) !important;
+    background-color: var(--glass-bg) !important;
+    border: 1px solid var(--primary-color, #035a21) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(4, 104, 27, 0.08) !important;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     transition: all 0.25s ease !important;
@@ -310,9 +309,9 @@ body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover,
 .pnlm-zoom-in.touch-active,
 .pnlm-zoom-out.touch-active,
 .pnlm-fullscreen-toggle-button.touch-active {
-    background-color: var(--primary-color, #ff9500) !important;
-    border-color: var(--primary-color, #ff9500) !important;
-    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.25), 0 0 15px rgba(255, 149, 0, 0.5) !important;
+    background-color: var(--primary-color, #065f3b) !important;
+    border-color: var(--primary-color, #0355308a) !important;
+    box-shadow: 0 8px 32px rgba(3, 100, 46, 0.25), 0 0 15px rgba(3, 144, 62, 0.5) !important;
 }
 
 .pnlm-zoom-in::before,
@@ -343,14 +342,14 @@ body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5'/%3E%3C/svg%3E") !important;
 }
 
-body:not(.touch-device) .pnlm-zoom-in:hover::before,
+/* body:not(.touch-device) .pnlm-zoom-in:hover::before,
 body:not(.touch-device) .pnlm-zoom-out:hover::before,
 body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover::before,
 .pnlm-zoom-in.touch-active::before,
 .pnlm-zoom-out.touch-active::before,
 .pnlm-fullscreen-toggle-button.touch-active::before {
     filter: brightness(0);
-}
+} */
 
 .pnlm-compass {
     position: absolute !important;
@@ -374,7 +373,7 @@ body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover::before,
 .pnlm-hotspot-base.pnlm-scene { 
     width: clamp(30px, 3.5vw, 50px) !important;
     height: clamp(30px, 3.5vw, 50px) !important;
-    background-color: rgba(40, 40, 40, 0.144) !important;
+    background-color: var(--glass-bg) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -387,11 +386,11 @@ body:not(.touch-device) .pnlm-fullscreen-toggle-button:hover::before,
 
 body:not(.touch-device) .pnlm-hotspot-base.pnlm-scene:hover,
 .pnlm-hotspot-base.pnlm-scene.touch-active {
-    background-color: rgba(60, 60, 60, 0.484) !important;
-    border-color: #ff9500 !important; 
+    background-color: var(--glass-bg) !important;
+    border-color: #047028 !important; 
     transform: scale(1.1);
-    box-shadow: 0 12px 30px rgba(255, 149, 0, 0.3);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9500' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    box-shadow: 0 12px 30px rgba(2, 82, 34, 0.3);
+    
 }
 
 .pnlm-hotspot-base.pnlm-scene:active,

@@ -112,7 +112,12 @@
                 </button>
 
                 <div id="apartment-sidebar" class="sidebar">
-                    <h3>Lista lokali</h3>
+                    <div class="sidebar-header">
+                        <div class="sidebar-icon-wrap" aria-hidden="true">
+                            <img src="./static/icon/sygnet_212121.svg" alt="Lista lokali" class="sidebar-icon" />
+                        </div>
+                        <h3>Lista lokali</h3>
+                    </div>
 
                     <!-- Ta lista docelowo będzie generowana z pliku CSV/JSON -->
                     <div class="apartment-list" id="apartment-list-container"></div>
@@ -131,6 +136,10 @@
                             <tr>
                                 <td>Cena:</td>
                                 <td><span id="info-price">-</span> zł</td>
+                            </tr>
+                            <tr>
+                                <td>Cena za metr:</td>
+                                <td><span id="info-price-meter">-</span> zł/m²</td>
                             </tr>
                             <tr>
                                 <td>Status:</td>

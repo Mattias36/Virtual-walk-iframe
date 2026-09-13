@@ -37,13 +37,13 @@ canvas {
 
 .btn-compass {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.195);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: clamp(20px, 1.8vw, 34px);
     height: clamp(20px, 1.8vw, 34px);
     font-size: clamp(9px, 0.8vw, 15px);
-    font-weight: 600;
+    font-weight: 500;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -55,9 +55,8 @@ canvas {
 body:not(.touch-device) .btn-compass:hover,
 .btn-compass.touch-active {
     background-color: var(--primary-color);
-    color: #000;
     border-color: var(--primary-color);
-    box-shadow: 0 0 12px rgba(255, 149, 0, 0.6);
+    box-shadow: 0 0 12px rgba(2, 103, 51, 0.6);
 }
 
 .btn-n {
@@ -119,10 +118,10 @@ body:not(.touch-device) .btn-compass:hover,
     left: calc(clamp(30px, 2.2vw, 44px) * -1);
     top: 50%;
     transform: translateY(-50%);
-    background: #11111169;
+    background: var(--glass-bg);
     border: 1px solid var(--primary-color);
     border-right: none !important;
-    color: var(--primary-color);
+    color: #fff;
     width: clamp(30px, 2.2vw, 44px);
     height: clamp(66px, 5.5vh, 95px);
     font-size: clamp(12px, 1vw, 20px);
@@ -132,7 +131,7 @@ body:not(.touch-device) .btn-compass:hover,
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: -2px 0 10px rgba(255, 149, 0, 0.2);
+    box-shadow: -2px 0 10px rgba(2, 86, 31, 0.2);
     outline: none !important;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
@@ -145,7 +144,6 @@ body:not(.touch-device) .btn-compass:hover,
 body:not(.touch-device) #sidebar-toggle:hover,
 #sidebar-toggle.touch-active {
     background: var(--primary-color);
-    color: #000;
     border-color: var(--primary-color);
     outline: none;
 }
@@ -153,7 +151,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
 .sidebar {
     width: 100%;
     height: 100%;
-    background: rgba(23, 103, 156, 0);
+    background: #01351f85;
     backdrop-filter: blur(30px) saturate(190%);
     -webkit-backdrop-filter: blur(30px) saturate(190%);
     border-left: 1px solid rgba(255, 255, 255, 0.12);
@@ -172,11 +170,36 @@ body:not(.touch-device) #sidebar-toggle:hover,
     pointer-events: none;
 }
 
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 0.7vw, 12px);
+    margin-bottom: clamp(4px, 0.5vh, 8px);
+}
+
+.sidebar-icon-wrap {
+    width: clamp(26px, 2vw, 36px);
+    height: clamp(26px, 2vw, 36px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-icon {
+    width: 70%;
+    height: 70%;
+    display: block;
+    
+    filter: brightness(0) invert(1);
+    object-fit: contain;
+    
+}
+
 .sidebar h3 {
-    margin: 0 0 clamp(4px, 0.6vh, 8px) 0;
-    color: var(--primary-color);
-    font-size: clamp(13px, 1vw, 20px);
-    font-weight: 600;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(25px, 2vw, 20px);
+    font-weight: 400;
     letter-spacing: 0.3px;
 }
 
@@ -209,7 +232,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
 }
 
 #apartment-list-container::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color, #ff9500);
+    background: var(--primary-color, #024523b7);
 }
 
 .apartment-item {
@@ -223,13 +246,13 @@ body:not(.touch-device) #sidebar-toggle:hover,
 }
 
 .apartment-item.active {
-    border-left: 3px solid #ff9500;
-    background-color: rgba(255, 149, 0, 0.1);
+    border-left: 3px solid #e5e6e67b;
+    background-color: rgba(6, 124, 53, 0.352);
     border-color: var(--primary-color);
 }
 
 .apartment-item .apt-title {
-    font-weight: 600;
+    font-weight: 500;
     font-size: clamp(12px, 0.9vw, 16px);
     margin-bottom: 2px;
     color: #fff;
@@ -251,9 +274,10 @@ body:not(.touch-device) #sidebar-toggle:hover,
 
 .info-card h4 {
     margin: 0 0 clamp(4px, 0.8vh, 10px) 0;
-    color: var(--primary-color);
+    color: #fff;
     font-size: clamp(11px, 0.8vw, 15px);
     text-transform: uppercase;
+    font-weight: 500;
 }
 
 .info-card table {
@@ -278,10 +302,10 @@ body:not(.touch-device) #sidebar-toggle:hover,
     width: 100%;
     padding: clamp(8px, 1vh, 12px);
     background-color: var(--primary-color);
-    color: #000;
+    color: #fff;
     border: none;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     font-size: clamp(11px, 0.8vw, 15px);
 }
@@ -331,19 +355,19 @@ body:not(.touch-device) #info-link-btn:hover,
     font-size: clamp(11px, 0.85vw, 17px);
     border-radius: 50px;
 
-    background: #1111118f;
+    background: #01351f8d;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #ff9500);
+    border: 1px solid var(--primary-color, #024f2fdf);
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 500;
 
     display: flex;
     align-items: center;
     justify-content: center;
     gap: clamp(6px, 0.5vw, 10px);
     white-space: nowrap;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 149, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(1, 81, 34, 0.238);
     transition: var(--transition-smooth, all 0.3s ease);
     box-sizing: border-box;
     cursor: pointer;
@@ -353,9 +377,8 @@ body:not(.touch-device) #info-link-btn:hover,
 body:not(.touch-device) .bottom-controls-bar button:hover,
 .bottom-controls-bar button.touch-active,
 .bottom-controls-bar button.active {
-    background: var(--primary-color, #ff9500);
-    color: #000;
-    box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3), 0 0 15px rgba(255, 149, 0, 0.6);
+    background: var(--primary-color, #024f2fdf);
+    box-shadow: 0 8px 32px rgba(1, 87, 58, 0.3), 0 0 15px rgba(2, 84, 33, 0.6);
     transform: translateY(-2px);
 }
 
@@ -377,10 +400,7 @@ body:not(.touch-device) .bottom-controls-bar button:hover,
     transition: filter 0.3s ease;
 }
 
-body:not(.touch-device) #btn-toggle-view:hover img,
-#btn-toggle-view.touch-active img {
-    filter: brightness(0);
-}
+
 
 .icon-360 {
     display: inline-block;
@@ -425,7 +445,7 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
     bottom: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(10, 10, 10, 0.92);
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -474,14 +494,14 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
     position: fixed;
     pointer-events: none;
     z-index: 100;
-    background: rgba(15, 15, 15, 0.493);
+    background: #024f2f81;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 8px;
     padding: 10px 14px;
     color: #fff;
-    font-family: sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     transform: translate(-50%, -125%);
@@ -492,9 +512,9 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
 }
 
 #apartment-tooltip .tooltip-title {
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
     margin-bottom: 2px;
 }
 
@@ -513,7 +533,7 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
     position: absolute;
     inset: 0;
     z-index: 200;
-    background: rgba(4, 8, 16, 0.72);
+    background: rgba(2, 79, 51, 0.411);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     display: flex;
@@ -555,9 +575,9 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    border: 1px solid rgba(255, 149, 0, 0.7);
+    border: 1px solid rgba(3, 83, 35, 0.538);
     border-radius: 12px;
-    background: rgba(255, 149, 0, 0.12);
+    background: rgba(2, 83, 46, 0.12);
     color: #fff;
     cursor: pointer;
     font-weight: 700;
@@ -567,14 +587,14 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
 body:not(.touch-device) .apartment-panel-back:hover,
 .apartment-panel-back.touch-active {
     background: var(--primary-color);
-    color: #000;
+
     transform: translateX(-2px);
 }
 
 .apartment-panel-title {
-    color: var(--primary-color);
+    color: #fff;
     font-weight: 700;
-    font-size: clamp(14px, 1.1vw, 22px);
+    font-size: clamp(18px, 1.1vw, 22px);
     text-align: right;
     flex: 1;
     overflow: hidden;

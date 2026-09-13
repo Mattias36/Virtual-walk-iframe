@@ -1,10 +1,10 @@
 /* --- ZMIENNE GLOBALNE --- */
 :root {
-    --primary-color: #ff9500;
-    --primary-hover: #e08400;
+    --primary-color: #047244ba;
+    --primary-hover: #047244;
     --bg-dark: #000;
     --bg-frame: #050505;
-    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-bg: #01351fa3;
     --glass-border: rgba(255, 255, 255, 0.15);
     --glass-blur: blur(20px) saturate(180%);
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

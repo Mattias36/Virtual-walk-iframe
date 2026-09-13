@@ -6,6 +6,44 @@ const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;
 let sidebarScrollAnchor = null;
 
+function formatPrice(value) {
+    if (value === null || value === undefined || value === '') return '-';
+
+    const normalized = String(value)
+        .replace(/\s+/g, '')
+        .replace(/[^0-9,.-]/g, '')
+        .replace(',', '.');
+
+    if (!normalized || normalized === '-' || normalized === '.') return String(value);
+
+    const numericValue = Number(normalized);
+    if (Number.isNaN(numericValue)) return String(value);
+
+    return new Intl.NumberFormat('pl-PL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(numericValue);
+}
+
+function formatPricePerMeter(value) {
+    if (value === null || value === undefined || value === '') return '-';
+
+    const normalized = String(value)
+        .replace(/\s+/g, '')
+        .replace(/[^0-9,.-]/g, '')
+        .replace(',', '.');
+
+    if (!normalized || normalized === '-' || normalized === '.') return String(value);
+
+    const numericValue = Number(normalized);
+    if (Number.isNaN(numericValue)) return String(value);
+
+    return new Intl.NumberFormat('pl-PL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(numericValue);
+}
+
 function restoreSelectedApartmentTooltip() {
     if (!state.showAllStatuses && state.selectedApartment) {
         showApartmentTooltipAtCenter(state.selectedApartment);
@@ -149,11 +187,13 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     const sizeEl = document.getElementById('info-size');
     const roomsEl = document.getElementById('info-rooms');
     const priceEl = document.getElementById('info-price');
+    const priceMeterEl = document.getElementById('info-price-meter');
     const statusEl = document.getElementById('info-status');
 
     if (sizeEl) sizeEl.textContent = data.size;
     if (roomsEl) roomsEl.textContent = data.rooms;
-    if (priceEl) priceEl.textContent = data.price;
+    if (priceEl) priceEl.textContent = formatPrice(data.price);
+    if (priceMeterEl) priceMeterEl.textContent = formatPricePerMeter(data.price_meter ?? data.priceMeter ?? data.price_per_meter ?? data['price_meter']);
     if (statusEl) {
         statusEl.textContent = data.status;
         if (data.status === 'Wolne' || data.status === 'Dostępne') statusEl.style.color = '#00ff00';
