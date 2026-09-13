@@ -33,7 +33,7 @@
 
 /* Reset stylów dla elementów typu button, które udają stare linki <a> */
 #btn-virtual-walk, #btn-back-to-makieta {
-    border: 1px solid var(--primary-color, #024628);
+    border: 1px solid var(--primary-hover);
     outline: none;
     cursor: pointer;
     font-family: inherit;
@@ -67,7 +67,7 @@
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #045428b2);
+    border: 1px solid var(--primary-hover);
     border-radius: 50px;
     color: #fff;
     font-weight: 500;
@@ -87,7 +87,7 @@
 
 body:not(.touch-device) #btn-back-to-makieta:hover,
 #btn-back-to-makieta.touch-active {
-    background: var(--primary-color, #036232ad);
+    background: var(--primary-hover);
 
     box-shadow: 0 8px 32px rgba(2, 80, 45, 0.3), 0 0 15px #036232ad;
     transform: translateY(-2px);
@@ -108,7 +108,7 @@ body:not(.touch-device) #btn-back-to-makieta:hover,
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #03552858) !important;
+    border: 1px solid var(--primary-hover) !important;
     color: #fff;
     display: flex !important;
     align-items: center;
@@ -126,8 +126,8 @@ body:not(.touch-device) #btn-back-to-makieta:hover,
 
 body:not(.touch-device) #btn-fullscreen-walk:hover,
 #btn-fullscreen-walk.touch-active {
-    background: var(--primary-color, #03552858);
-    border-color: var(--primary-color, #03552858) !important;
+    background: var(--primary-hover);
+    border-color: var(--primary-hover) !important;
     box-shadow: 0 8px 32px rgba(2, 80, 45, 0.3), 0 0 15px #036232ad;
 }
 
@@ -149,12 +149,6 @@ body:not(.touch-device) #btn-fullscreen-walk:hover,
     fill: none;
     
     transition: transform 0.3s ease;
-}
-
-/* Animacja po najechaniu (bez zmian, działa idealnie) */
-body:not(.touch-device) #btn-back-to-makieta:hover .icon-back,
-#btn-back-to-makieta.touch-active .icon-back {
-    transform: rotate(-15deg);
 }
 
 .pnlm-controls-container {

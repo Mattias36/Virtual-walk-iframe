@@ -56,7 +56,7 @@ body:not(.touch-device) .btn-compass:hover,
 .btn-compass.touch-active {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    box-shadow: 0 0 12px rgba(2, 103, 51, 0.6);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.322);
 }
 
 .btn-n {
@@ -131,7 +131,7 @@ body:not(.touch-device) .btn-compass:hover,
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: -2px 0 10px rgba(2, 86, 31, 0.2);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
     outline: none !important;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
@@ -143,7 +143,7 @@ body:not(.touch-device) .btn-compass:hover,
 
 body:not(.touch-device) #sidebar-toggle:hover,
 #sidebar-toggle.touch-active {
-    background: var(--primary-color);
+    background: var(--primary-hover);
     border-color: var(--primary-color);
     outline: none;
 }
@@ -151,7 +151,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
 .sidebar {
     width: 100%;
     height: 100%;
-    background: #01351f85;
+    background: var(--glass-bg);
     backdrop-filter: blur(30px) saturate(190%);
     -webkit-backdrop-filter: blur(30px) saturate(190%);
     border-left: 1px solid rgba(255, 255, 255, 0.12);
@@ -178,8 +178,8 @@ body:not(.touch-device) #sidebar-toggle:hover,
 }
 
 .sidebar-icon-wrap {
-    width: clamp(26px, 2vw, 36px);
-    height: clamp(26px, 2vw, 36px);
+    width: clamp(28px, 2vw, 36px);
+    height: clamp(28px, 2vw, 36px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,8 +236,8 @@ body:not(.touch-device) #sidebar-toggle:hover,
 }
 
 .apartment-item {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(0, 0, 0, 0.275);
+    border: 1px solid rgba(3, 86, 18, 0.07);
     padding: clamp(8px, 1vh, 14px);
     border-radius: clamp(6px, 0.6vw, 12px);
     cursor: pointer;
@@ -246,9 +246,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
 }
 
 .apartment-item.active {
-    border-left: 3px solid #e5e6e67b;
-    background-color: rgba(6, 124, 53, 0.352);
-    border-color: var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 .apartment-item .apt-title {
@@ -265,7 +263,7 @@ body:not(.touch-device) #sidebar-toggle:hover,
 
 .info-card {
     background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(2, 78, 18, 0.345);
     border-radius: clamp(6px, 0.6vw, 12px);
     padding: clamp(8px, 1vh, 14px);
     margin-top: auto;
@@ -354,13 +352,12 @@ body:not(.touch-device) #info-link-btn:hover,
     padding: 0 clamp(12px, 1vw, 24px);
     font-size: clamp(11px, 0.85vw, 17px);
     border-radius: 50px;
-
-    background: #01351f8d;
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color, #024f2fdf);
+    border: 1px solid var(--primary-hover);
     color: #ffffff;
-    font-weight: 500;
+    font-weight: 600;
 
     display: flex;
     align-items: center;
@@ -377,8 +374,8 @@ body:not(.touch-device) #info-link-btn:hover,
 body:not(.touch-device) .bottom-controls-bar button:hover,
 .bottom-controls-bar button.touch-active,
 .bottom-controls-bar button.active {
-    background: var(--primary-color, #024f2fdf);
-    box-shadow: 0 8px 32px rgba(1, 87, 58, 0.3), 0 0 15px rgba(2, 84, 33, 0.6);
+    background: var(--primary-hover);
+    box-shadow: 0 8px 32px rgba(1, 87, 58, 0.3), 0 0 15px rgba(2, 84, 33, 0.434);
     transform: translateY(-2px);
 }
 
@@ -494,16 +491,16 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
     position: fixed;
     pointer-events: none;
     z-index: 100;
-    background: #024f2f81;
+    background: var(--glass-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: var(--glass-border);
     border-radius: 8px;
     padding: 10px 14px;
     color: #fff;
     font-family: var(--font-family);
-    font-size: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.647);
     transform: translate(-50%, -125%);
     transition: opacity 0.15s ease;
     display: flex;
@@ -513,7 +510,7 @@ body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
 
 #apartment-tooltip .tooltip-title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     color: #fff;
     margin-bottom: 2px;
 }
