@@ -8,8 +8,11 @@
     --glass-border: rgba(255, 255, 255, 0.15);
     --glass-blur: blur(20px) saturate(180%);
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --button-font-weight: 500;
     --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+     --button-icon-size: clamp(16px, 2vw, 18px);
 }
 
 /* ZMIANA: Wymuszenie dziedziczenia wysokości przez strukturę dokumentu */

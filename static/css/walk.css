@@ -37,6 +37,7 @@
     outline: none;
     cursor: pointer;
     font-family: inherit;
+    font-weight: var(--button-font-weight);
 }
 
 #walk-view-toolbar {
@@ -70,7 +71,7 @@
     border: 1px solid var(--primary-hover);
     border-radius: 50px;
     color: #fff;
-    font-weight: 500;
+    font-weight: var(--button-font-weight);
     font-size: clamp(11px, 0.85vw, 17px);
 
     display: flex;

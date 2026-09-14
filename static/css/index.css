@@ -339,7 +339,8 @@ body:not(.touch-device) #info-link-btn:hover,
     pointer-events: auto;
 }
 
-/* WSPÓLNE STYLE DLA PRZYCISKÓW (Większy zakres płynnego skalowania) */
+
+
 .bottom-controls-bar button {
     position: relative;
     bottom: auto;
@@ -351,13 +352,14 @@ body:not(.touch-device) #info-link-btn:hover,
     height: clamp(36px, 3vw, 56px);
     padding: 0 clamp(12px, 1vw, 24px);
     font-size: clamp(11px, 0.85vw, 17px);
+    line-height: 1;
     border-radius: 50px;
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--primary-hover);
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 500;
 
     display: flex;
     align-items: center;
@@ -370,6 +372,24 @@ body:not(.touch-device) #info-link-btn:hover,
     cursor: pointer;
     outline: none;
 }
+
+#btn-virtual-walk,
+#btn-toggle-view,
+#btn-toggle-legend {
+    font-weight: 500 !important;
+}
+
+.bottom-controls-bar button > svg,
+.bottom-controls-bar button > img {
+    width: var(--button-icon-size) !important;
+    height: var(--button-icon-size) !important;
+    min-width: var(--button-icon-size);
+    min-height: var(--button-icon-size);
+    flex-shrink: 0;
+    display: block;
+    line-height: 1;
+}
+
 
 body:not(.touch-device) .bottom-controls-bar button:hover,
 .bottom-controls-bar button.touch-active,
@@ -386,11 +406,16 @@ body:not(.touch-device) .bottom-controls-bar button:hover,
 /* IKONKI W PRZYCISKACH TEKSTOWYCH */
 .bottom-controls-bar button svg,
 .bottom-controls-bar button img {
-    width: clamp(16px, 1.1vw, 24px) !important;
-    height: clamp(16px, 1.1vw, 24px) !important;
+    width: var(--button-icon-size) !important;
+    height: var(--button-icon-size) !important;
+    min-width: var(--button-icon-size);
+    min-height: var(--button-icon-size);
     object-fit: contain;
     display: block;
+    flex-shrink: 0;
+    
 }
+
 
 #btn-toggle-view img {
     filter: brightness(0) invert(1);
@@ -403,6 +428,14 @@ body:not(.touch-device) .bottom-controls-bar button:hover,
     display: inline-block;
     vertical-align: middle;
     transition: transform 0.3s ease;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+#btn-virtual-walk .icon-360 text {
+    font-weight: 500 !important;
+    font-family: inherit !important;
 }
 
 body:not(.touch-device) #btn-virtual-walk:hover .icon-360,
