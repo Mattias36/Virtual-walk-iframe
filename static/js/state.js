@@ -2,6 +2,9 @@
 export const state = {
     currentMode: 'makieta', // 'makieta' | 'walk'
     viewType: 'near',
+    zoom: 1,
+    panX: 0,
+    panY: 0,
     totalFrames: 120,
     currentFrame: 0,
     isDragging: false,

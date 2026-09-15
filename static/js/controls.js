@@ -6,6 +6,114 @@ const container = document.getElementById('container-360');
 const colorIdDisplay = document.getElementById('color-id');
 const tooltip = document.getElementById('apartment-tooltip');
 
+const MIN_FAR_ZOOM = 1;
+const MAX_FAR_ZOOM = 2.5;
+const FAR_ZOOM_STEP = 0.25;
+
+export function changeZoom(direction) {
+    if (state.viewType !== 'far') return;
+
+    state.zoom = Math.min(
+        MAX_FAR_ZOOM,
+        Math.max(MIN_FAR_ZOOM, state.zoom + direction * FAR_ZOOM_STEP)
+    );
+
+    applyFarZoomTransform();
+    updateFarMapViewport();
+
+    const zoomOutButton = document.querySelector('.far-zoom-buttons button:last-child');
+    const zoomInButton = document.querySelector('.far-zoom-buttons button:first-child');
+    if (zoomOutButton) zoomOutButton.disabled = state.zoom <= MIN_FAR_ZOOM;
+    if (zoomInButton) zoomInButton.disabled = state.zoom >= MAX_FAR_ZOOM;
+}
+
+export function resetZoom() {
+    state.zoom = MIN_FAR_ZOOM;
+    state.panX = 0;
+    state.panY = 0;
+    [document.getElementById('main-canvas'), document.getElementById('highlight-canvas')].forEach(canvasElement => {
+        if (canvasElement) canvasElement.style.transform = '';
+    });
+    updateFarMapViewport();
+}
+
+export function centerFarView() {
+    if (state.viewType !== 'far') return;
+
+    state.panX = 0;
+    state.panY = 0;
+    applyFarZoomTransform();
+    updateFarMapViewport();
+}
+
+export function toggleFarMap() {
+    const mapPanel = document.getElementById('far-map-panel');
+    const toggle = document.getElementById('far-map-toggle');
+    if (!mapPanel || !toggle) return;
+
+    const isHidden = mapPanel.classList.toggle('hidden');
+    toggle.textContent = isHidden ? 'Pokaż mapę' : 'Ukryj mapę';
+    toggle.setAttribute('aria-expanded', String(!isHidden));
+}
+
+function applyFarZoomTransform() {
+    const panX = -state.panX * (state.zoom - 1) * 50;
+    const panY = -state.panY * (state.zoom - 1) * 50;
+    const transform = `translate(${panX}%, ${panY}%) scale(${state.zoom})`;
+
+    [document.getElementById('main-canvas'), document.getElementById('highlight-canvas')].forEach(canvasElement => {
+        if (canvasElement) canvasElement.style.transform = transform;
+    });
+}
+
+function updateFarMapViewport() {
+    const viewport = document.getElementById('far-map-viewport');
+    if (!viewport) return;
+
+    const width = 100 / state.zoom;
+    const height = 100 / state.zoom;
+    const centerX = 50 + state.panX * 50;
+    const centerY = 50 + state.panY * 50;
+
+    viewport.style.width = `${width}%`;
+    viewport.style.height = `${height}%`;
+    viewport.style.left = `${centerX - width / 2}%`;
+    viewport.style.top = `${centerY - height / 2}%`;
+}
+
+function setFarMapCenter(event) {
+    const map = document.getElementById('far-map');
+    if (!map || state.viewType !== 'far') return;
+
+    const rect = map.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+
+    state.panX = (x - 0.5) * 2;
+    state.panY = (y - 0.5) * 2;
+    applyFarZoomTransform();
+    updateFarMapViewport();
+}
+
+export function updateFarMap() {
+    const mapCanvas = document.getElementById('far-map-canvas');
+    const source = state.imgBuilding;
+    if (!mapCanvas || !source || !source.complete || !source.naturalWidth) return;
+
+    const map = mapCanvas.parentElement;
+    const width = map.clientWidth;
+    const height = map.clientHeight;
+    if (!width || !height) return;
+
+    const pixelRatio = window.devicePixelRatio || 1;
+    mapCanvas.width = width * pixelRatio;
+    mapCanvas.height = height * pixelRatio;
+    const mapContext = mapCanvas.getContext('2d');
+    mapContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    mapContext.drawImage(source, 0, 0, width, height);
+    updateFarMapViewport();
+}
+
 function isApartmentPanelOpen() {
     return document.body.classList.contains('apartment-panel-open');
 }
@@ -103,6 +211,15 @@ function handleMove(clientX) {
 
 export function initControls() {
     if (!container) return;
+
+    const farMap = document.getElementById('far-map');
+    if (farMap) {
+        farMap.addEventListener('pointerdown', setFarMapCenter);
+        farMap.addEventListener('pointermove', event => {
+            if (event.buttons) setFarMapCenter(event);
+        });
+    }
+    window.addEventListener('far-map-update', updateFarMap);
 
     // Ruch myszy z wykorzystaniem requestAnimationFrame
     container.addEventListener('mousemove', (e) => {
@@ -261,6 +378,7 @@ export function initControls() {
     const stopUIPropagation = (e) => e.stopPropagation();
     const uiElements = [
         document.querySelector('.compass-wrapper'),
+        document.getElementById('far-zoom-controls'),
         document.getElementById('sidebar-container'),
         document.getElementById('apartment-sidebar')
     ];

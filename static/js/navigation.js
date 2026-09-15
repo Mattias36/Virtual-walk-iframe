@@ -1,5 +1,6 @@
 import { state } from './state.js';
 import { updateFrames, resetHighResState, drawScene } from './renderer.js';
+import { resetZoom } from './controls.js';
 
 export function toggleViewType() {
     resetHighResState();
@@ -12,6 +13,7 @@ export function toggleViewType() {
     const sidebarContainer = document.getElementById('sidebar-container');
     const highlightCanvas = document.getElementById('highlight-canvas');
     const highlightCtx = highlightCanvas ? highlightCanvas.getContext('2d') : null;
+    const zoomControls = document.getElementById('far-zoom-controls');
 
     // Adresy ikon Zoom Out / Zoom In
     const iconZoomOut = "https://icons.iconarchive.com/icons/aniket-suvarna/box/128/bxs-zoom-out-icon.png";
@@ -20,6 +22,7 @@ export function toggleViewType() {
     if (state.viewType === 'near') {
         state.viewType = 'far';
         state.showAllStatuses = false;
+        if (zoomControls) zoomControls.classList.remove('hidden');
 
         // 1. Ukrywamy przycisk statusów oraz legendę i tooltip
         if (statusBtn) {
@@ -49,6 +52,8 @@ export function toggleViewType() {
         
     } else {
         state.viewType = 'near';
+        resetZoom();
+        if (zoomControls) zoomControls.classList.add('hidden');
 
         // Przywracamy przycisk statusów
         if (statusBtn) {

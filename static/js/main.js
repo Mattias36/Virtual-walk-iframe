@@ -2,7 +2,7 @@
 
 import { loadApartmentsFromExcel } from './data.js';
 import { preloadAllFrames } from './imageLoader.js';
-import { initControls, rotateToDirection, switchMode } from './controls.js';
+import { initControls, rotateToDirection, switchMode, changeZoom, centerFarView, toggleFarMap } from './controls.js';
 import { toggleSidebar, selectApartment, toggleLegend } from './ui.js';
 import { state } from './state.js';
 import { toggleViewType } from './navigation.js'; // 1. IMPORT NOWEJ FUNKCJI
@@ -16,6 +16,9 @@ window.toggleSidebar = toggleSidebar;
 window.selectApartment = selectApartment;
 window.toggleLegend = toggleLegend;
 window.toggleViewType = toggleViewType; // 2. WYSTAWIENIE DO WINDOW
+window.changeZoom = changeZoom;
+window.centerFarView = centerFarView;
+window.toggleFarMap = toggleFarMap;
 window.state = state
 
 function openApartmentPanel() {

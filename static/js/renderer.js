@@ -213,6 +213,7 @@ export function drawScene() {
     // 6. BLOKADA INTERAKCJI DLA TRYBU 'FAR'
     if (state.viewType === 'far') {
         scheduleHighResLoad(safeFrame);
+        window.dispatchEvent(new CustomEvent('far-map-update'));
     
         container.style.cursor = 'grab';
         state.canDrag = true;

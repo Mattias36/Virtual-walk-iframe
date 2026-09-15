@@ -49,6 +49,27 @@
 
                 <div id="apartment-tooltip" class="hidden"></div>
 
+                <div id="far-zoom-controls" class="far-zoom-controls hidden" aria-label="Sterowanie powiększeniem">
+                    <div id="far-map-panel" class="far-map-panel">
+                        <div id="far-map" class="far-map" role="application" aria-label="Mapa widoku z daleka">
+                            <canvas id="far-map-canvas"></canvas>
+                            <div id="far-map-viewport" aria-hidden="true"></div>
+                        </div>
+                        <div class="far-zoom-buttons">
+                            <button type="button" onclick="changeZoom(1)" title="Powiększ" aria-label="Powiększ">+</button>
+                            <button type="button" onclick="changeZoom(-1)" title="Pomniejsz" aria-label="Pomniejsz">−</button>
+                            <button type="button" onclick="centerFarView()" title="Wycentruj widok" aria-label="Wycentruj widok">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="far-map-toggle" class="far-map-toggle" type="button" onclick="toggleFarMap()"
+                        aria-expanded="true">Ukryj mapę</button>
+                </div>
+
                 <div class="compass-wrapper">
                     <div class="compass-center"></div>
                     <button class="btn-compass btn-n" onclick="rotateToDirection(1)" title="Północ">N</button>
