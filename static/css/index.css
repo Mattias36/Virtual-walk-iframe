@@ -54,7 +54,6 @@ canvas {
     display: flex;
     align-self: flex-end;
     gap: 6px;
-    margin-right: -10px;
 }
 
 .far-map-toggle {
