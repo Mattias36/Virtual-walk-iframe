@@ -1,0 +1,304 @@
+@media (orientation: landscape) and (max-height: 600px) {
+    :root {
+        --button-icon-size: 16px;
+    }
+
+    main {
+        padding: 3px;
+    }
+
+    #container-360 {
+        width: 100vw;
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        aspect-ratio: auto;
+        border-radius: 0;
+    }
+
+    #sidebar-container {
+        width: 148px;
+    }
+
+    #sidebar-container:not(.open) {
+        width: 0;
+    }
+
+    .sidebar {
+        padding: 7px 8px;
+        gap: 6px;
+    }
+
+    .sidebar-header {
+        gap: 5px;
+        margin-bottom: 0;
+    }
+
+    .sidebar-icon-wrap {
+        width: 24px;
+        height: 24px;
+    }
+
+    .sidebar h3 {
+        font-size: 15px;
+    }
+
+    #apartment-list-container,
+    .apartment-list {
+        gap: 5px;
+        padding-right: 2px;
+    }
+
+    .apartment-item {
+        padding: 6px;
+        border-radius: 5px;
+    }
+
+    .apartment-item .apt-title {
+        font-size: 11px;
+    }
+
+    .apartment-item .apt-desc {
+        font-size: 9px;
+    }
+
+    .info-card {
+        max-height: 31%;
+        overflow: hidden;
+        padding: 6px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .info-card h4 {
+        margin-bottom: 3px;
+        font-size: 10px;
+    }
+
+    .info-card table {
+        display: block;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        margin-bottom: 4px;
+        font-size: 10px;
+    }
+
+    .info-card tbody {
+        display: table;
+        width: 100%;
+    }
+
+    .info-card td {
+        padding: 2px 0;
+    }
+
+    #info-link-btn {
+        flex: 0 0 auto;
+        padding: 6px;
+        border-radius: 5px;
+        font-size: 10px;
+    }
+
+    #sidebar-toggle {
+        left: -27px;
+        width: 27px;
+        height: 58px;
+        font-size: 12px;
+        border-radius: 6px 0 0 6px;
+    }
+
+    .compass-wrapper {
+        bottom: 9px;
+        left: 9px;
+        width: 56px;
+        height: 56px;
+        padding: 3px;
+    }
+
+    .btn-compass {
+        width: 18px;
+        height: 18px;
+        font-size: 8px;
+    }
+
+    .compass-center {
+        width: 7px;
+        height: 7px;
+    }
+
+    .bottom-controls-bar {
+        bottom: 9px;
+        gap: 5px;
+        max-width: calc(100% - 82px);
+    }
+
+    .bottom-controls-bar button {
+        height: 34px;
+        min-width: 34px;
+        padding: 0 8px;
+        gap: 4px;
+        font-size: 10px;
+        border-radius: 17px;
+    }
+
+    #btn-fullscreen {
+        width: 34px !important;
+        min-width: 34px !important;
+        height: 34px !important;
+    }
+
+    #btn-fullscreen svg {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    #container-360:has(#sidebar-container.open) .bottom-controls-bar {
+        max-width: calc(100% - 68px);
+    }
+
+    #container-360:has(#sidebar-container.open) .bottom-controls-bar button {
+        width: 34px;
+        min-width: 34px;
+        padding: 0;
+        font-size: 0;
+    }
+
+    #container-360:has(#sidebar-container.open) .bottom-controls-bar button > svg,
+    #container-360:has(#sidebar-container.open) .bottom-controls-bar button > img {
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px;
+        min-height: 16px;
+        margin: 0;
+        flex: 0 0 16px;
+    }
+
+    #apartment-tooltip {
+        max-width: 120px;
+        padding: 6px 8px;
+        border-radius: 5px;
+        font-size: 10px;
+        gap: 2px;
+    }
+
+    #apartment-tooltip .tooltip-title {
+        font-size: 11px;
+        margin-bottom: 1px;
+    }
+
+    #apartment-tooltip .tooltip-row {
+        gap: 8px;
+    }
+
+    .far-zoom-controls {
+        top: 9px;
+        right: 9px;
+        gap: 4px;
+    }
+
+    .far-map {
+        width: 105px;
+        border-radius: 5px;
+    }
+
+    .far-zoom-buttons {
+        gap: 4px;
+    }
+
+    .far-zoom-buttons button {
+        width: 29px;
+        height: 29px;
+        font-size: 18px;
+    }
+
+    .far-zoom-buttons button svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .far-map-toggle {
+        min-height: 24px;
+        padding: 0 7px;
+        border-radius: 12px;
+        font-size: 9px;
+    }
+
+    #container-walk {
+        width: 100vw;
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        aspect-ratio: auto;
+        border-radius: 0;
+    }
+
+    #walk-view-toolbar {
+        bottom: 9px;
+        gap: 5px;
+        max-width: calc(100% - 18px);
+    }
+
+    #btn-back-to-makieta {
+        height: 34px;
+        min-width: 34px;
+        padding: 0 8px;
+        gap: 4px;
+        border-radius: 17px;
+        font-size: 10px;
+    }
+
+    #btn-back-to-makieta .icon-back {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        flex: 0 0 16px;
+    }
+
+    #btn-fullscreen-walk {
+        width: 34px !important;
+        min-width: 34px !important;
+        height: 34px !important;
+    }
+
+    #btn-fullscreen-walk svg {
+        width: 15px !important;
+        height: 15px !important;
+        margin: 0;
+    }
+
+    #container-walk .pnlm-controls-container {
+        top: 9px !important;
+        left: 9px !important;
+        gap: 5px !important;
+    }
+
+    #container-walk .pnlm-zoom-controls {
+        width: 30px !important;
+        gap: 5px !important;
+    }
+
+    #container-walk .pnlm-zoom-in,
+    #container-walk .pnlm-zoom-out,
+    #container-walk .pnlm-fullscreen-toggle-button,
+    #container-walk .pnlm-compass {
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+    }
+
+    #container-walk .pnlm-zoom-in::before,
+    #container-walk .pnlm-zoom-out::before,
+    #container-walk .pnlm-fullscreen-toggle-button::before {
+        width: 12px;
+        height: 12px;
+    }
+
+    #container-walk .pnlm-compass {
+        right: 9px !important;
+        bottom: 9px !important;
+    }
+}
