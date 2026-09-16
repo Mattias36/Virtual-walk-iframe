@@ -124,6 +124,8 @@ function notifyRotationEnd() {
 
 // 1. Deklarujemy hasDragged na poziomie modułu, aby wszystkie funkcje miały do niej dostęp
 let hasDragged = false;
+let suppressNextClick = false;
+let ignoreMapClickUntil = 0;
 let dragStartX = 0;
 let dragStartY = 0;
 
@@ -195,6 +197,11 @@ function handleMove(clientX) {
 
     if (Math.abs(deltaX) >= state.sensitivity) {
         const frameShift = Math.floor(deltaX / state.sensitivity);
+        if (frameShift !== 0) {
+            hasDragged = true;
+            suppressNextClick = true;
+            ignoreMapClickUntil = performance.now() + 500;
+        }
         state.currentFrame += frameShift;
 
         if (state.currentFrame > state.totalFrames) state.currentFrame -= state.totalFrames;
@@ -245,12 +252,14 @@ export function initControls() {
         if (state.isDragging) {
             state.isDragging = false;
             const didDrag = hasDragged;
+            suppressNextClick = didDrag;
             
             // Jeśli faktycznie obracaliśmy, zerujemy pozycję klastra hover, 
             // aby uniknąć przypadkowego podświetlenia mieszkania w miejscu puszczenia
             if (hasDragged) {
                 state.mouseX = -1;
                 state.mouseY = -1;
+                state.hoveredApartment = state.selectedApartment;
             }
             
             if (state.showAllStatuses || state.selectedApartment) {
@@ -288,9 +297,28 @@ export function initControls() {
         }
     });
 
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+    if (canvasWrapper) {
+        canvasWrapper.addEventListener('mouseleave', () => {
+            state.mouseX = -1;
+            state.mouseY = -1;
+            state.mapHoveredApartment = null;
+            window.dispatchEvent(new CustomEvent('apartment-map-hover', {
+                detail: { apartment: null }
+            }));
+            drawScene();
+        });
+    }
+
     // JEDYNE I PRAWIDŁOWE MIEJSCE OBSŁUGI KLIKNIĘCIA
     container.addEventListener('click', (e) => {
         if (isApartmentPanelOpen()) return;
+        if (performance.now() < ignoreMapClickUntil) return;
+        if (suppressNextClick) {
+            suppressNextClick = false;
+            hasDragged = false;
+            return;
+        }
         if (state.showAllStatuses) return;
 
         if (hasDragged || state.isAnimating) {
@@ -334,12 +362,14 @@ export function initControls() {
         if (state.isDragging) {
             state.isDragging = false;
             const didDrag = hasDragged;
+            suppressNextClick = didDrag;
 
             // Na telefonie po zakończeniu obrotu zerujemy dotyk – palec został odjęty od ekranu!
             // Dzięki temu mieszkanie pod palcem NIE podświetli się po puszczeniu obrotu.
             if (hasDragged) {
                 state.mouseX = -1;
                 state.mouseY = -1;
+                state.hoveredApartment = state.selectedApartment;
             }
 
             if (state.showAllStatuses || state.selectedApartment) {

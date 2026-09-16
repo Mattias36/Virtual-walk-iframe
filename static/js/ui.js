@@ -275,6 +275,11 @@ function showApartmentTooltipAtCenter(data, redraw = true) {
 
     const coords = getApartmentCenterCoords(data);
 
+    if (!coords) {
+        tooltip.classList.add('hidden');
+        return;
+    }
+
     if (coords) {
         let statusColor = '#00ff00';
         if (data.status === 'Rezerwacja') statusColor = '#ffcc00';
