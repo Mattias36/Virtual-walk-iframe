@@ -368,6 +368,13 @@ body:not(.touch-device) #sidebar-toggle:hover,
     background-color: var(--primary-color);
 }
 
+@media (hover: hover) and (pointer: fine) {
+    .apartment-item.hovered {
+        background-color: rgba(4, 114, 68, 0.188);
+        border-color: var(--primary-hover);
+    }
+}
+
 .apartment-item .apt-title {
     font-weight: 500;
     font-size: clamp(12px, 0.9vw, 16px);

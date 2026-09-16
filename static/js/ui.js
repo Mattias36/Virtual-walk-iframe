@@ -52,6 +52,19 @@ function restoreSelectedApartmentTooltip() {
 
 window.addEventListener('apartment-rotation-end', restoreSelectedApartmentTooltip);
 
+window.addEventListener('apartment-map-hover', event => {
+    if (!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) return;
+    if (state.sidebarHoveredApartment) return;
+
+    if (event.detail?.apartment) {
+        showApartmentTooltipAtCenter(event.detail.apartment, false);
+    } else if (state.selectedApartment) {
+        showApartmentTooltipAtCenter(state.selectedApartment, false);
+    } else if (tooltip) {
+        tooltip.classList.add('hidden');
+    }
+});
+
 function updateApartmentTooltipPosition(data) {
     if (!data || !tooltip) return;
 
@@ -95,8 +108,26 @@ export function renderApartmentList() {
         `;
 
         item.addEventListener('click', () => {
+            if (state.showAllStatuses) return;
             const isSelected = state.selectedApartment?.id === apt.id;
             selectApartment(isSelected ? null : apt.id, !isSelected);
+        });
+
+        item.addEventListener('mouseenter', () => {
+            if (state.showAllStatuses || !window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) return;
+            state.sidebarHoveredApartment = apt.id;
+            document.querySelectorAll('.apartment-item.hovered').forEach(element => {
+                element.classList.remove('hovered');
+            });
+            item.classList.add('hovered');
+            drawScene();
+        });
+
+        item.addEventListener('mouseleave', () => {
+            if (!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) return;
+            state.sidebarHoveredApartment = null;
+            item.classList.remove('hovered');
+            drawScene();
         });
 
         container.appendChild(item);
@@ -138,6 +169,7 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     if (!apartmentId) {
         state.selectedApartment = null;
         state.hoveredApartment = null;
+        state.sidebarHoveredApartment = null;
         if (card) card.classList.add('hidden');
         if (typeof drawScene === 'function') drawScene();
         return;
@@ -228,7 +260,7 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     }
 }
 // POMOCNICZA FUNKCJA: Wywoływana PO ZAKOŃCZENIU rotacji
-function showApartmentTooltipAtCenter(data) {
+function showApartmentTooltipAtCenter(data, redraw = true) {
     if (!data || state.showAllStatuses) {
         if (tooltip) tooltip.classList.add('hidden');
         return;
@@ -236,7 +268,7 @@ function showApartmentTooltipAtCenter(data) {
 
     // Ponownie upewniamy się, że podświetlenie jest aktywne
     state.hoveredApartment = data;
-    if (typeof drawScene === 'function') drawScene();
+    if (redraw && typeof drawScene === 'function') drawScene();
     
     const tooltip = document.getElementById('apartment-tooltip');
     if (!tooltip) return;
@@ -325,6 +357,12 @@ export function toggleLegend() {
     const legendBox = document.getElementById('legend-box');
 
     state.showAllStatuses = !state.showAllStatuses;
+
+    if (state.showAllStatuses) {
+        state.sidebarHoveredApartment = null;
+        state.mapHoveredApartment = null;
+        document.querySelectorAll('.apartment-item.hovered').forEach(item => item.classList.remove('hovered'));
+    }
 
     if (btnToggleLegend) {
         btnToggleLegend.classList.toggle('active', state.showAllStatuses);

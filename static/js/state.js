@@ -29,6 +29,8 @@ export const state = {
     mouseY: 0,
     ticking: false,
     hoveredApartment: null,
+    mapHoveredApartment: null,
+    sidebarHoveredApartment: null,
     selectedApartment: null,
 
     // Baza mieszkań

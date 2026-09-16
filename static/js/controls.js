@@ -291,6 +291,7 @@ export function initControls() {
     // JEDYNE I PRAWIDŁOWE MIEJSCE OBSŁUGI KLIKNIĘCIA
     container.addEventListener('click', (e) => {
         if (isApartmentPanelOpen()) return;
+        if (state.showAllStatuses) return;
 
         if (hasDragged || state.isAnimating) {
             hasDragged = false;

@@ -185,9 +185,24 @@ export function drawScene() {
         }
 
         state.hoveredApartment = currentApt ? currentApt.id : null;
-
-        const sidebar = document.getElementById('apartment-sidebar');
-        const isSidebarOpen = sidebar && sidebar.classList.contains('open');
+        const canHover = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
+        const mapHoveredApartment = canHover && !state.showAllStatuses && !state.sidebarHoveredApartment
+            ? currentApt
+            : null;
+        if (state.mapHoveredApartment !== (mapHoveredApartment?.id || null)) {
+            state.mapHoveredApartment = mapHoveredApartment?.id || null;
+            window.dispatchEvent(new CustomEvent('apartment-map-hover', {
+                detail: { apartment: mapHoveredApartment }
+            }));
+        }
+        const hoveredApartmentId = state.showAllStatuses
+            ? null
+            : state.sidebarHoveredApartment || mapHoveredApartment?.id;
+        document.querySelectorAll('.apartment-item.hovered').forEach(item => item.classList.remove('hovered'));
+        if (hoveredApartmentId) {
+            document.querySelector(`.apartment-item[data-id="${hoveredApartmentId}"]`)
+                ?.classList.add('hovered');
+        }
 
         const activeApt = state.selectedApartment;
 
@@ -197,12 +212,21 @@ export function drawScene() {
                 colorIdDisplay.style.color = "#00ff00";
             }
             if (tooltip) tooltip.classList.add('hidden');
-        } else if (activeApt) {
-            targetR = activeApt.r;
-            targetG = activeApt.g;
-            targetB = activeApt.b;
-            targetStatus = activeApt.status;
-        } else if (!state.selectedApartment) {
+        } else if (state.sidebarHoveredApartment) {
+            // Hovering the sidebar does not change the makieta.
+            if (activeApt) {
+                targetR = activeApt.r;
+                targetG = activeApt.g;
+                targetB = activeApt.b;
+                targetStatus = activeApt.status;
+            }
+        } else if (mapHoveredApartment || activeApt) {
+            const targetApartment = mapHoveredApartment || activeApt;
+            targetR = targetApartment.r;
+            targetG = targetApartment.g;
+            targetB = targetApartment.b;
+            targetStatus = targetApartment.status;
+        } else {
             if (tooltip) tooltip.classList.add('hidden');
         }
     }
