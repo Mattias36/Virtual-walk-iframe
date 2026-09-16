@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { updateFrames, drawScene, replayHighlightAnimation, resetHighResState } from './renderer.js';
+import { updateFrames, drawScene, replayHighlightAnimation } from './renderer.js';
 import { toggleSidebar, selectApartment } from './ui.js';
 
 const container = document.getElementById('container-360');
@@ -135,8 +135,6 @@ export function rotateToDirection(targetFrame) {
 
     if (tooltip) tooltip.classList.add('hidden');
 
-    resetHighResState();
-
     state.isAnimating = true;
 
     const highlightCanvas = document.getElementById('highlight-canvas');
@@ -196,8 +194,6 @@ function handleMove(clientX) {
     const deltaX = clientX - state.startX;
 
     if (Math.abs(deltaX) >= state.sensitivity) {
-        resetHighResState();
-
         const frameShift = Math.floor(deltaX / state.sensitivity);
         state.currentFrame += frameShift;
 
@@ -512,8 +508,6 @@ export function switchMode(mode) {
     const statusBtn = document.getElementById('btn-toggle-legend');
 
     if (mode === 'walk') {
-        resetHighResState();
-
         state.showAllStatuses = false;
 
         const highlightCanvas = document.getElementById('highlight-canvas');
@@ -561,8 +555,6 @@ export function switchMode(mode) {
             window.viewer.destroy();
             window.viewer = null;
         }
-
-        resetHighResState();
 
         setTimeout(() => {
             drawScene();

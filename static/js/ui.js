@@ -210,7 +210,6 @@ export function selectApartment(apartmentId, shouldRotate = false) {
     const isSidebarOpen = sidebarContainer && sidebarContainer.classList.contains('open');
 
     if (!isSidebarOpen) {
-        if (typeof clear4kState === 'function') clear4kState();
         if (listContainer) listContainer.scrollTop = 0;
         sidebarScrollAnchor = null;
         
@@ -294,10 +293,6 @@ export function toggleSidebar() {
         toggleIcon.innerHTML = isOpen ? "&#10095;" : "&#10094;";
     }
 
-    if (isOpen && typeof clear4kState === 'function') {
-        clear4kState();
-    }
-
     // Po zakończeniu animacji sidebara przerysowujemy scenę z wybranym mieszkaniem
     setTimeout(() => {
         if (isOpen && listContainer && sidebarScrollAnchor) {
@@ -323,19 +318,6 @@ export function toggleSidebar() {
             showApartmentTooltipAtCenter(state.selectedApartment);
         }
     }, 360);
-}
-
-function clear4kState() {
-    if (state.loaded4KImage) {
-        state.loaded4KImage.src = ''; // Anuluje pobieranie/trzymanie w pamięci RAM
-        state.loaded4KImage = null;
-    }
-    // Jeśli używasz elementu <img> w HTML do podglądu 4K:
-    const img4KEl = document.getElementById('image-4k-preview'); 
-    if (img4KEl) {
-        img4KEl.src = '';
-        img4KEl.classList.add('hidden');
-    }
 }
 
 export function toggleLegend() {

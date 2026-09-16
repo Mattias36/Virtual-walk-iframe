@@ -1,10 +1,8 @@
 import { state } from './state.js';
-import { updateFrames, resetHighResState, drawScene } from './renderer.js';
+import { updateFrames, drawScene } from './renderer.js';
 import { resetZoom } from './controls.js';
 
 export function toggleViewType() {
-    resetHighResState();
-    
     const statusBtn = document.getElementById('btn-toggle-legend');
     const legendBox = document.getElementById('legend-box');
     const btnText = document.getElementById('btn-view-text');

@@ -44,106 +44,6 @@ export function updateFrames() {
     drawScene();
 }
 
-let load4kTimeout = null;
-let current4kImage = null;
-let current4kFrameIndex = null;
-let current4kViewType = null;
-
-function getHighResPath(frameIndex) {
-    if (state.viewType === 'far') {
-        // Zgodna numeracja 0..119 -> 120..239
-        const fileNumber = frameIndex + 120;
-        const paddedIndex = String(fileNumber).padStart(4, '0');
-        return `./static/MovieRenders/Uj_z_daleka/NewLevelSequence.${paddedIndex}.avif`;
-    } else {
-        // Dla widoku z bliska (0000 -> 0119)
-        const paddedIndex = String(frameIndex).padStart(4, '0');
-        return `./static/MovieRenders/Uj_z_bliska/NewLevelSequence.${paddedIndex}.avif`;
-    }
-}
-
-function isHighResBlocked() {
-    const sidebarContainer = document.getElementById('sidebar-container');
-    const isSidebarOpen = sidebarContainer && sidebarContainer.classList.contains('open');
-    return state.currentMode === 'walk' || isSidebarOpen || state.showAllStatuses;
-}
-
-export function clear4kState() {
-    if (load4kTimeout) {
-        clearTimeout(load4kTimeout);
-        load4kTimeout = null;
-    }
-    if (current4kImage) {
-        current4kImage.src = '';
-    }
-    current4kImage = null;
-    current4kFrameIndex = null;
-    current4kViewType = null;
-}
-
-export function scheduleHighResLoad(frameIndex) {
-    if (isHighResBlocked()) {
-        clear4kState();
-        return;
-    }
-
-    // Gwarancja cyklicznego zakresu 0..119
-    const safeFrameIndex = ((frameIndex % state.totalFrames) + state.totalFrames) % state.totalFrames;
-
-    if (current4kFrameIndex === safeFrameIndex && current4kViewType === state.viewType && current4kImage) return;
-
-    if (load4kTimeout) clearTimeout(load4kTimeout);
-
-    load4kTimeout = setTimeout(() => {
-        if (isHighResBlocked()) {
-            clear4kState();
-            return;
-        }
-
-        const requestedView = state.viewType;
-        const targetPath = getHighResPath(safeFrameIndex);
-
-        console.log(`[4K Loader] Planowanie pobierania (${requestedView}):`, targetPath);
-
-        const img4k = new Image();
-
-        // 1. Zdarzenie SUKCESU
-        img4k.onload = () => {
-            const currentSafeFrame = ((state.currentFrame % state.totalFrames) + state.totalFrames) % state.totalFrames;
-            
-            if (
-                !isHighResBlocked() &&
-                !state.isDragging &&
-                !state.isAnimating &&
-                currentSafeFrame === safeFrameIndex &&
-                state.viewType === requestedView
-            ) {
-                current4kImage = img4k;
-                current4kFrameIndex = safeFrameIndex;
-                current4kViewType = requestedView;
-
-                console.log(`%c[4K Loader] SUKCES! Obraz 4K (${requestedView}) dla klatki ${safeFrameIndex} wczytany i wyświetlony.`, 'color: #00ff00; font-weight: bold;');
-
-                drawScene();
-            } else {
-                console.log(`[4K Loader] Pobrano 4K, ale odrzucono (nastąpiła zmiana klatki/trybu).`);
-            }
-        };
-
-        // 2. Zdarzenie BŁĘDU
-        img4k.onerror = () => {
-            console.error(`[4K Loader] BŁĄD! Nie znaleziono pliku 4K pod ścieżką: ${targetPath}`);
-        };
-
-        // 3. Przypisanie ścieżki
-        img4k.src = targetPath;
-    }, 200);
-}
-
-export function resetHighResState() {
-    clear4kState();
-}
-
 export function drawScene() {
     if (state.currentMode === 'walk') return;
     // Bezpieczne sprowadzenie do indeksu 0..119
@@ -161,17 +61,7 @@ export function drawScene() {
 
     state.imgBuilding = baseImg;
 
-    // 2. Ładowanie 4K
-    const isUsing4k = !isHighResBlocked() &&
-        !state.isDragging &&
-        !state.isAnimating &&
-        current4kImage &&
-        current4kImage.complete &&
-        current4kImage.naturalWidth > 0 &&
-        current4kFrameIndex === safeFrame &&
-        current4kViewType === state.viewType;
-
-    const activeBuildingImg = isUsing4k ? current4kImage : state.imgBuilding;
+    const activeBuildingImg = state.imgBuilding;
 
     // 3. Rozmiar Canvasu
     const targetWidth = activeBuildingImg.naturalWidth || 1920;
@@ -197,7 +87,6 @@ export function drawScene() {
 
     // 5. OBSŁUGA OBRACANIA (DRAG)
     if (state.isDragging) {
-        resetHighResState();
         if (colorIdDisplay) {
             colorIdDisplay.textContent = "Obracanie...";
             colorIdDisplay.style.color = "#aaa";
@@ -212,7 +101,6 @@ export function drawScene() {
 
     // 6. BLOKADA INTERAKCJI DLA TRYBU 'FAR'
     if (state.viewType === 'far') {
-        scheduleHighResLoad(safeFrame);
         window.dispatchEvent(new CustomEvent('far-map-update'));
     
         container.style.cursor = 'grab';
@@ -230,8 +118,6 @@ export function drawScene() {
     }
 
     // 7. OBSŁUGA MASKI I INTERAKCJE DLA TRYBU 'NEAR'
-    scheduleHighResLoad(safeFrame);
-
     let targetR = null, targetG = null, targetB = null;
     let targetStatus = 'Dostępne';
     let currentApt = null;
@@ -366,7 +252,6 @@ function renderHighlights(targetR, targetG, targetB, targetStatus) {
 
     if (state.showAllStatuses) {
         highlightCanvas.className = 'active';
-        clear4kState();
         try {
             if (cachedLegendFrame === safeFrame && cachedLegendImageData) {
                 highlightCtx.putImageData(cachedLegendImageData, 0, 0);
