@@ -1,0 +1,505 @@
+@media (orientation: portrait) and (max-width: 960px) {
+    :root {
+        --button-icon-size: 18px;
+        --portrait-sidebar-height: min(45vh, 320px);
+    }
+
+    main {
+        padding: 6px;
+    }
+
+    #container-360 {
+        width: 100vw;
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        aspect-ratio: auto;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    #canvas-wrapper {
+        position: relative;
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        height: auto;
+        transition: none;
+    }
+
+    #sidebar-container {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        top: auto;
+        width: 100%;
+        height: auto;
+        max-height: var(--portrait-sidebar-height);
+        z-index: 26;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 0;
+        flex-shrink: 0;
+    }
+
+    #sidebar-container:not(.open) {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
+    #sidebar-container:not(.open) .sidebar {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        pointer-events: none;
+        border-top-width: 0;
+    }
+
+    #sidebar-toggle {
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% - 1px);
+        top: auto;
+        transform: translateX(-50%);
+        width: 72px;
+        height: 32px;
+        min-width: 58px;
+        min-height: 28px;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1;
+        border-radius: clamp(8px, 0.6vw, 14px) clamp(8px, 0.6vw, 14px) 0 0 ;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background: var(--glass-bg);
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline: none;
+    }
+
+    #toggle-icon {
+        display: inline-block;
+        transition: transform 0.2s ease;
+        transform: rotate(-90deg);
+    }
+
+    #sidebar-container.open #toggle-icon {
+        transform: rotate(90deg);
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: var(--portrait-sidebar-height);
+        height: auto;
+        background: var(--glass-bg);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        box-sizing: border-box;
+        padding: 8px 8px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow: hidden;
+        transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+        opacity: 1;
+    }
+
+    .sidebar-header {
+        gap: 6px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .sidebar-icon-wrap {
+        width: 24px;
+        height: 24px;
+    }
+
+    .sidebar h3 {
+        font-size: 16px;
+    }
+
+    #apartment-list-container,
+    .apartment-list {
+        gap: 6px;
+        padding-right: 2px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .apartment-item {
+        padding: 7px 8px;
+        border-radius: 8px;
+    }
+
+    .apartment-item .apt-title {
+        font-size: 12px;
+    }
+
+    .apartment-item .apt-desc {
+        font-size: 9px;
+    }
+
+    .info-card {
+        max-height: none;
+        width: 100%;
+        overflow: hidden; /* Zapewnia, że treść nie wychodzi poza zaokrąglone rogi */
+        padding: 7px 8px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        margin-top: 4px;
+        flex-shrink: 0;
+        position: relative;
+        box-sizing: border-box;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .info-card h4 {
+        font-size: 12px;
+        margin-bottom: 4px;
+        flex-shrink: 0;
+    }
+
+    /* KONTENER/TABELA Z KONTROLOWANĄ WYSOKOŚCIĄ I SCROLLEM */
+    .info-card table {
+        display: block; /* Wymagane do działania max-height i scrolla wewnątrz samej tabeli */
+        width: 100%;
+        max-height: 52px; /* Wysokość mieszcząca ok. 2.5 - 3 wiersze danych */
+        overflow-y: auto; /* Włącza pionowy scroll */
+        font-size: 10px;
+        margin-bottom: 4px;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        
+        /* Stylizacja scrollbara dla Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-color, #ff9500) transparent;
+    }
+
+    /* Stylizacja scrollbara dla Chrome, Safari, Edge */
+    .info-card table::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    .info-card table::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .info-card table::-webkit-scrollbar-thumb {
+        background: var(--primary-color, #ff9500);
+        border-radius: 3px;
+    }
+
+    .info-card tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .info-card tr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        box-sizing: border-box;
+    }
+
+    .info-card td {
+        padding: 3px 2px;
+        border-bottom: none;
+        box-sizing: border-box;
+    }
+
+    .info-card td:first-child {
+        text-align: left;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .info-card td:last-child {
+        text-align: right;
+        font-weight: 600;
+    }
+
+    #info-link-btn {
+        width: 100%;
+        padding: 10px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        display: block !important;
+        margin-top: 5px;
+    }
+
+    .compass-wrapper {
+        bottom: 12px;
+        left: 12px;
+        width: 78px;
+        height: 78px;
+        padding: 5px;
+    }
+
+    .btn-compass {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+
+    .compass-center {
+        width: 9px;
+        height: 9px;
+    }
+
+    .bottom-controls-bar {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: calc(100% - 18px);
+        justify-content: center;
+        gap: 6px;
+        padding: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        pointer-events: none;
+    }
+
+    /* W widoku z daleka (mapka + zoom widoczne) pasek przycisków ma być na dole */
+    #canvas-wrapper:has(#far-zoom-controls:not(.hidden)) .bottom-controls-bar {
+        top: auto;
+        bottom: 12px;
+    }
+
+    .bottom-controls-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .bottom-controls-bar > * {
+        flex: 0 0 auto;
+        pointer-events: auto;
+    }
+
+    .bottom-controls-bar button {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50%;
+        font-size: 0;
+        line-height: 0;
+        white-space: nowrap;
+        box-sizing: border-box;
+        box-shadow: none;
+    }
+
+    body:not(.touch-device) .bottom-controls-bar button:hover,
+    .bottom-controls-bar button.touch-active,
+    .bottom-controls-bar button.active {
+        box-shadow: none;
+    }
+
+    .bottom-controls-bar button > svg,
+    .bottom-controls-bar button > img {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px;
+        min-height: 18px;
+        margin: 0;
+        flex: 0 0 18px;
+    }
+
+    .bottom-controls-bar button span,
+    .bottom-controls-bar button .label {
+        display: none;
+    }
+
+    #btn-fullscreen,
+    #btn-fullscreen-walk {
+        width: 40px !important;
+        min-width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        box-shadow: none !important;
+    }
+
+    #btn-fullscreen svg,
+    #btn-fullscreen-walk svg {
+        width: 18px !important;
+        height: 18px !important;
+        margin: 0;
+    }
+
+    #container-360:has(#sidebar-container.open) .bottom-controls-bar {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    #apartment-tooltip {
+        max-width: 170px;
+        padding: 8px 10px;
+        border-radius: 7px;
+        font-size: 11px;
+        gap: 2px;
+    }
+
+    #apartment-tooltip .tooltip-title {
+        font-size: 13px;
+        margin-bottom: 1px;
+    }
+
+    #apartment-tooltip .tooltip-row {
+        gap: 8px;
+    }
+
+    .far-zoom-controls {
+        top: 12px;
+        right: 12px;
+        gap: 4px;
+    }
+
+    .far-map {
+        width: 110px;
+        border-radius: 6px;
+    }
+
+    .far-zoom-buttons {
+        gap: 4px;
+    }
+
+    .far-zoom-buttons button {
+        width: 29px;
+        height: 29px;
+        font-size: 18px;
+        border-radius: 50%;
+    }
+
+    .far-zoom-buttons button svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .far-map-toggle {
+        min-height: 26px;
+        padding: 0 8px;
+        border-radius: 13px;
+        font-size: 9px;
+    }
+
+    #container-walk {
+        width: 100vw;
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        aspect-ratio: auto;
+        border-radius: 0;
+    }
+
+    #walk-view-toolbar {
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        gap: 6px;
+        max-width: none;
+        justify-content: center;
+    }
+
+    #btn-back-to-makieta {
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50%;
+        font-size: 0;
+    }
+
+    #btn-back-to-makieta .icon-back {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        flex: 0 0 18px;
+    }
+
+    #container-walk .pnlm-controls-container {
+        top: 12px !important;
+        left: 12px !important;
+        gap: 6px !important;
+    }
+
+    #container-walk .pnlm-zoom-controls {
+        width: 30px !important;
+        gap: 5px !important;
+    }
+
+    #container-walk .pnlm-zoom-in,
+    #container-walk .pnlm-zoom-out,
+    #container-walk .pnlm-fullscreen-toggle-button,
+    #container-walk .pnlm-compass {
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        border-radius: 50% !important;
+    }
+
+    #container-walk .pnlm-compass {
+        right: 12px !important;
+        bottom: 12px !important;
+    }
+
+    /* Fullscreen w desktopie wymusza układ rzędowy (canvas + sidebar obok siebie);
+       w pionie sidebar ma leżeć pod canvasem, inaczej ekran robi się czarny */
+    html:fullscreen #container-360,
+    html:-webkit-full-screen #container-360,
+    #container-360:fullscreen,
+    #container-360:-webkit-full-screen {
+        flex-direction: column !important;
+    }
+
+    #apartment-panel {
+        padding: 10px;
+    }
+
+    .apartment-panel-shell {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Pozycjonowanie absolutne zamiast flex/procentowego, żeby PDF wypełnił cały kontener na mobile */
+    .apartment-panel-body {
+        position: relative;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .apartment-panel-body iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: auto;
+        min-width: 100%;
+    }
+}

@@ -327,7 +327,13 @@ export function toggleSidebar() {
     }
 
     if (toggleIcon) {
-        toggleIcon.innerHTML = isOpen ? "&#10095;" : "&#10094;";
+        const isPortrait = window.matchMedia && window.matchMedia('(orientation: portrait)').matches;
+        if (isPortrait) {
+            // W pionie kierunek strzałki ustawia CSS (rotacja), znak zostaje ten sam
+            toggleIcon.innerHTML = "&#10095;";
+        } else {
+            toggleIcon.innerHTML = isOpen ? "&#10095;" : "&#10094;";
+        }
     }
 
     // Po zakończeniu animacji sidebara przerysowujemy scenę z wybranym mieszkaniem
