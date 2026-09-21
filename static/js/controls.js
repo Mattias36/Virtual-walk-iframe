@@ -185,7 +185,7 @@ export function rotateToDirection(targetFrame) {
 
         updateFrames();
         currentStep++;
-        setTimeout(animate, 15);
+        requestAnimationFrame(animate);
     }
 
     animate();

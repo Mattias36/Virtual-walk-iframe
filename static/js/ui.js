@@ -201,7 +201,7 @@ export function selectApartment(apartmentId, shouldRotate = false) {
             if (diff < -state.totalFrames / 2) diff += state.totalFrames;
             
             const steps = Math.abs(diff);
-            const animDuration = (steps * 20) + 250;
+            const animDuration = (steps * 16.7) + 180;
 
             rotateToDirection(Number(targetFrame));
 

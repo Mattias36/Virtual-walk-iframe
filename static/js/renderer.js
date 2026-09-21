@@ -124,8 +124,10 @@ export function drawScene() {
 
     if (state.imagesMasksCache[safeFrame]) {
         state.imgMask = state.imagesMasksCache[safeFrame];
-        maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
-        maskCtx.drawImage(state.imgMask, 0, 0, maskCanvas.width, maskCanvas.height);
+        if (!state.isAnimating) {
+            maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+            maskCtx.drawImage(state.imgMask, 0, 0, maskCanvas.width, maskCanvas.height);
+        }
 
         container.style.cursor = 'grab';
         state.canDrag = true;

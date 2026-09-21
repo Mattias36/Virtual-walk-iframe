@@ -17,7 +17,7 @@
     }
 
     #sidebar-container {
-        width: 148px;
+        width: 165px;
     }
 
     #sidebar-container:not(.open) {
@@ -55,7 +55,7 @@
     }
 
     .apartment-item .apt-title {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     .apartment-item .apt-desc {
@@ -63,7 +63,7 @@
     }
 
     .info-card {
-        max-height: 31%;
+        max-height: 40%;
         overflow: hidden;
         padding: 6px;
         border-radius: 5px;
@@ -113,26 +113,27 @@
     .compass-wrapper {
         bottom: 9px;
         left: 9px;
-        width: 56px;
-        height: 56px;
-        padding: 3px;
+        width: 78px;
+        height: 78px;
+        padding: 5px;
     }
 
     .btn-compass {
-        width: 18px;
-        height: 18px;
-        font-size: 8px;
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
     }
 
     .compass-center {
-        width: 7px;
-        height: 7px;
+        width: 9px;
+        height: 9px;
     }
 
     .bottom-controls-bar {
         bottom: 9px;
         gap: 5px;
         max-width: calc(100% - 82px);
+        overflow: visible;
     }
 
     .bottom-controls-bar button {
@@ -144,15 +145,25 @@
         border-radius: 17px;
     }
 
-    #btn-fullscreen {
-        width: 34px !important;
-        min-width: 34px !important;
-        height: 34px !important;
+    .legend-box {
+        bottom: calc(100% + 8px);
+        padding: 7px 10px;
+        gap: 5px;
+        border-radius: 7px;
+        font-size: 10px;
     }
 
-    #btn-fullscreen svg {
-        width: 15px !important;
-        height: 15px !important;
+    .legend-item {
+        gap: 6px;
+    }
+
+    .color-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    #btn-fullscreen {
+        display: none !important;
     }
 
     #container-360:has(#sidebar-container.open) .bottom-controls-bar {
@@ -258,15 +269,7 @@
     }
 
     #btn-fullscreen-walk {
-        width: 34px !important;
-        min-width: 34px !important;
-        height: 34px !important;
-    }
-
-    #btn-fullscreen-walk svg {
-        width: 15px !important;
-        height: 15px !important;
-        margin: 0;
+        display: none !important;
     }
 
     #container-walk .pnlm-controls-container {

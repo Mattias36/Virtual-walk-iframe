@@ -32,7 +32,7 @@ function openApartmentPanel() {
     }
 
     title.textContent = apartment.name || 'Karta lokalu';
-    iframe.src = apartment.url + '#toolbar=0';
+    iframe.src = apartment.url + '#toolbar=1&navpanes=0&view=Fit';
 
     requestAnimationFrame(() => {
         panel.classList.remove('hidden');
