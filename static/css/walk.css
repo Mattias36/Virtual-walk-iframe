@@ -2,17 +2,16 @@
    INTEGRACJA TRYBU SPA (WIRTUALNY SPACER)
    ========================================================================== */
 
-/* Główny kontener spaceru zajmujący identyczny obszar */
+/* Główny kontener spaceru wypełniający całą wyznaczoną przestrzeń (cały iframe) */
 #container-walk {
     position: relative;
-    width: min(94vw, calc((100vh - 60px) * (16 / 9)));
-    max-width: 1500px;
-    aspect-ratio: 16 / 9;
+    width: 100%;
+    height: 100%;
     background-color: var(--bg-frame);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(8px, 1.2vw, 16px);
+    border: none;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    box-shadow: none;
     display: flex;
     flex-direction: column;
 }

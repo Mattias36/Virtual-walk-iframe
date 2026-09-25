@@ -168,6 +168,8 @@ export function rotateToDirection(targetFrame) {
 
             if (highlightCanvas) {
                 highlightCanvas.style.transition = '';
+                // Bez tego hover pozostawał niewidoczny (opacity ustawione na 0 na starcie animacji)
+                highlightCanvas.style.opacity = '';
             }
 
             if (state.showAllStatuses || state.selectedApartment) {

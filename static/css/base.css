@@ -31,7 +31,7 @@ html, body, #app-container, .viewer-container {
 
 body {
     font-family: var(--font-family);
-    background-color: var(--bg-dark); 
+    background-color: transparent; /* pozwala hostowi (iframe) prześwitywać poza kontenerami 360/walk */
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -48,11 +48,11 @@ body {
 main {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: stretch;
     width: 100%;
     height: 100%;
-    padding: clamp(4px, 1.5vh, 15px); /* Płynny padding dopasowany do okna */
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -69,19 +69,16 @@ main {
     white-space: nowrap;
 }
 
-/* GŁÓWNY FRAME (Dynamiczne skalowanie proporcjonalne) */
+/* GŁÓWNY FRAME - wypełnia całą wyznaczoną przestrzeń (cały iframe) */
 #container-360 {
     position: relative;
-    /* width: 100%; */
-    /* Wybieramy mniejszy wymiar: 94vw ALBO wysokość dopasowana do formatu 16:9 z zapasem na nagłówek */
-    width: min(94vw, calc((100vh - 60px) * (16 / 9)));
-    max-width: 1500px;
-    aspect-ratio: 16 / 9;
+    width: 100%;
+    height: 100%;
     background-color: var(--bg-frame);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(8px, 1.2vw, 16px);
+    border: none;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    box-shadow: none;
     display: flex; 
     flex-direction: row;
 }
