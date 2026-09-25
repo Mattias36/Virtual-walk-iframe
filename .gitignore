@@ -2,13 +2,13 @@
 node_modules/
 
 # Ciężkie zasoby graficzne i dane inwestycji
-static/MovieRenders/
-static/panoramy_jpg/
 
 
 # Pliki konfiguracyjne i lokalne
 *.json
 *.txt
+iframe-test.html
+Thumbs.db
 
 # Wyjątek: NIE ignoruj kluczowego pliku manifestu npm!
 !package.json
