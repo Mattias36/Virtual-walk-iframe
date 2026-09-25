@@ -17,6 +17,34 @@ export const defaultColorLinks = [
     { id: 'blok-fioletowy-2', name: 'Mieszkanie 108/2', r: 96, g: 189, b: 62, url: 'https://twojastrona.pl/blok-fioletowy-2', size: 35.0, rooms: 2, price: '330 100', price_meter: '9 431', status: 'Rezerwacja' }
 ];
 
+const onlineSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1xWifR3Ym33HwCf5cAYruAXTL1vENRXXhFRqp6PLpxoA/export?format=csv&gid=1421506441';
+
+function parseNumber(value) {
+    return parseFloat(String(value ?? '').replace(',', '.').replace(/\s/g, ''));
+}
+
+function normalizeApartmentUrl(value) {
+    const url = String(value ?? '').trim().replace(/\\/g, '/');
+    return /^https?:\/\//i.test(url) ? url : `./${url.replace(/^\.\//, '')}`;
+}
+
+function mapApartmentRow(row) {
+    return {
+        id: String(row.id ?? '').trim(),
+        name: String(row.name ?? '').trim(),
+        r: parseInt(row.r),
+        g: parseInt(row.g),
+        b: parseInt(row.b),
+        url: normalizeApartmentUrl(row.url),
+        size: parseNumber(row.size),
+        rooms: parseInt(row.rooms),
+        price: String(row.price ?? '').trim(),
+        price_meter: String(row.price_meter ?? row.pricePerMeter ?? row.price_metr ?? row['cena_za_metr'] ?? row['Cena za metr'] ?? row['Cena/m²'] ?? '').trim(),
+        status: String(row.status ?? '').trim(),
+        frame: row.frame !== undefined ? parseInt(row.frame) : undefined
+    };
+}
+
 // export async function loadApartmentsFromExcel() {
 //     state.colorLinks = [...defaultColorLinks];
 //     try {
@@ -81,20 +109,7 @@ export async function loadApartmentsFromExcel() {
                 const rawData = XLSX.utils.sheet_to_json(worksheet);
 
                 if (rawData && rawData.length > 0) {
-                    state.colorLinks = rawData.map(row => ({
-                        id: String(row.id).trim(),
-                        name: String(row.name).trim(),
-                        r: parseInt(row.r),
-                        g: parseInt(row.g),
-                        b: parseInt(row.b),
-                        url: String(row.url).trim(),
-                        size: parseFloat(row.size),
-                        rooms: parseInt(row.rooms),
-                        price: String(row.price).trim(),
-                        price_meter: String(row.price_meter ?? row.pricePerMeter ?? row.price_metr ?? row['cena_za_metr'] ?? row['Cena za metr'] ?? row['Cena/m²'] ?? '').trim(),
-                        status: String(row.status).trim(),
-                        frame: row.frame !== undefined ? parseInt(row.frame) : undefined
-                    }));
+                    state.colorLinks = rawData.map(mapApartmentRow);
                     console.log("[NW.js] Pomyślnie załadowano dane z pliku Excel!");
                 }
                 renderApartmentList();
@@ -105,32 +120,19 @@ export async function loadApartmentsFromExcel() {
         console.warn("[NW.js] Nie udało się odczytać pliku przez FS:", err);
     }
 
-    // 2. TRYB PRZEGLĄDARKI / LIVE SERVER (FALLBACK HTTP)
+    // 2. TRYB PRZEGLĄDARKI / LIVE SERVER (DANE Z GOOGLE SHEETS)
     try {
-        const response = await fetch('./mieszkania.xlsx?v=' + Date.now());
-        if (!response.ok) throw new Error("Brak pliku mieszkania.xlsx na serwerze.");
+        const response = await fetch(onlineSpreadsheetUrl + '&t=' + Date.now());
+        if (!response.ok) throw new Error("Nie udało się pobrać danych z Google Sheets.");
 
-        const arrayBuffer = await response.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const csvText = await response.text();
+        const workbook = XLSX.read(csvText, { type: 'string' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         const rawData = XLSX.utils.sheet_to_json(worksheet);
 
         if (rawData && rawData.length > 0) {
-            state.colorLinks = rawData.map(row => ({
-                id: String(row.id).trim(),
-                name: String(row.name).trim(),
-                r: parseInt(row.r),
-                g: parseInt(row.g),
-                b: parseInt(row.b),
-                url: String(row.url).trim(),
-                size: parseFloat(row.size),
-                rooms: parseInt(row.rooms),
-                price: String(row.price).trim(),
-                price_meter: String(row.price_meter ?? row.pricePerMeter ?? row.price_metr ?? row['cena_za_metr'] ?? row['Cena za metr'] ?? row['Cena/m²'] ?? '').trim(),
-                status: String(row.status).trim(),
-                frame: row.frame !== undefined ? parseInt(row.frame) : undefined
-            }));
+            state.colorLinks = rawData.map(mapApartmentRow);
             console.log("[Fetch] Pomyślnie załadowano dane z pliku Excel!");
         }
     } catch (err) {
