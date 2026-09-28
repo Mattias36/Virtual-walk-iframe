@@ -126,7 +126,7 @@ export async function loadApartmentsFromExcel() {
         if (!response.ok) throw new Error("Nie udało się pobrać danych z Google Sheets.");
 
         const csvText = await response.text();
-        const workbook = XLSX.read(csvText, { type: 'string' });
+        const workbook = XLSX.read(csvText, { type: 'string', raw: true });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         const rawData = XLSX.utils.sheet_to_json(worksheet);

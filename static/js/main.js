@@ -21,6 +21,138 @@ window.centerFarView = centerFarView;
 window.toggleFarMap = toggleFarMap;
 window.state = state
 
+let mobilePdfDocument = null;
+let mobilePdfRenderTask = null;
+let mobilePdfFitScale = 1;
+let mobilePdfScale = 1;
+let mobilePdfPageNumber = 1;
+let mobilePdfRequestId = 0;
+let mobilePdfRenderId = 0;
+
+function isMobilePdfViewport() {
+    return window.matchMedia('(max-width: 960px), (orientation: landscape) and (max-height: 600px)').matches && window.pdfjsLib;
+}
+
+async function renderMobilePdfPage(fitPage = false) {
+    if (!mobilePdfDocument) return;
+
+    const viewportElement = document.getElementById('apartment-pdf-viewport');
+    const canvas = document.getElementById('apartment-pdf-canvas');
+    const pageLabel = document.getElementById('apartment-pdf-page');
+    const zoomLabel = document.getElementById('apartment-pdf-zoom');
+    const previousButton = document.getElementById('apartment-pdf-prev');
+    const nextButton = document.getElementById('apartment-pdf-next');
+    if (!viewportElement || !canvas) return;
+
+    const renderId = ++mobilePdfRenderId;
+    if (mobilePdfRenderTask) {
+        mobilePdfRenderTask.cancel();
+        mobilePdfRenderTask = null;
+    }
+
+    const page = await mobilePdfDocument.getPage(mobilePdfPageNumber);
+    if (renderId !== mobilePdfRenderId) return;
+
+    const baseViewport = page.getViewport({ scale: 1 });
+    if (fitPage || !mobilePdfFitScale) {
+        const fitWidth = Math.max(1, viewportElement.clientWidth - 24) / baseViewport.width;
+        const fitHeight = Math.max(1, viewportElement.clientHeight - 24) / baseViewport.height;
+        mobilePdfFitScale = Math.min(fitWidth, fitHeight);
+        mobilePdfScale = mobilePdfFitScale;
+    }
+
+    const pageViewport = page.getViewport({ scale: mobilePdfScale });
+    const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.ceil(pageViewport.width * outputScale);
+    canvas.height = Math.ceil(pageViewport.height * outputScale);
+    canvas.style.width = `${pageViewport.width}px`;
+    canvas.style.height = `${pageViewport.height}px`;
+
+    if (pageLabel) pageLabel.textContent = `${mobilePdfPageNumber} / ${mobilePdfDocument.numPages}`;
+    if (zoomLabel) zoomLabel.textContent = `${Math.round((mobilePdfScale / mobilePdfFitScale) * 100)}%`;
+    if (previousButton) previousButton.disabled = mobilePdfPageNumber <= 1;
+    if (nextButton) nextButton.disabled = mobilePdfPageNumber >= mobilePdfDocument.numPages;
+
+    const context = canvas.getContext('2d');
+    mobilePdfRenderTask = page.render({
+        canvasContext: context,
+        viewport: pageViewport,
+        transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0]
+    });
+
+    try {
+        await mobilePdfRenderTask.promise;
+    } catch (error) {
+        if (error.name !== 'RenderingCancelledException') throw error;
+    } finally {
+        if (renderId === mobilePdfRenderId) mobilePdfRenderTask = null;
+    }
+}
+
+async function openMobileApartmentPdf(url) {
+    const requestId = ++mobilePdfRequestId;
+    const viewer = document.getElementById('apartment-pdf-mobile');
+    const iframe = document.getElementById('apartment-pdf-frame');
+    if (!viewer || !iframe || !window.pdfjsLib) return false;
+
+    viewer.classList.remove('hidden');
+    iframe.classList.add('hidden');
+    mobilePdfDocument?.destroy();
+    mobilePdfDocument = null;
+    mobilePdfFitScale = 1;
+    mobilePdfScale = 1;
+    mobilePdfPageNumber = 1;
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    try {
+        const pdfDocument = await window.pdfjsLib.getDocument(url).promise;
+        if (requestId !== mobilePdfRequestId) {
+            pdfDocument.destroy();
+            return true;
+        }
+        mobilePdfDocument = pdfDocument;
+        await renderMobilePdfPage(true);
+        return true;
+    } catch (error) {
+        if (requestId === mobilePdfRequestId) {
+            console.warn('[PDF] Mobilny podgląd nie zadziałał, używam podglądu przeglądarki.', error);
+            viewer.classList.add('hidden');
+            iframe.classList.remove('hidden');
+            iframe.src = `${url}#toolbar=1&navpanes=0&view=Fit`;
+        }
+        return true;
+    }
+}
+
+function initMobilePdfControls() {
+    document.getElementById('apartment-pdf-prev')?.addEventListener('click', () => {
+        if (!mobilePdfDocument || mobilePdfPageNumber <= 1) return;
+        mobilePdfPageNumber--;
+        renderMobilePdfPage(true);
+    });
+    document.getElementById('apartment-pdf-next')?.addEventListener('click', () => {
+        if (!mobilePdfDocument || mobilePdfPageNumber >= mobilePdfDocument.numPages) return;
+        mobilePdfPageNumber++;
+        renderMobilePdfPage(true);
+    });
+    document.getElementById('apartment-pdf-fit')?.addEventListener('click', () => renderMobilePdfPage(true));
+    document.getElementById('apartment-pdf-zoom-out')?.addEventListener('click', () => {
+        if (!mobilePdfDocument) return;
+        mobilePdfScale = Math.max(mobilePdfFitScale, mobilePdfScale / 1.25);
+        renderMobilePdfPage();
+    });
+    document.getElementById('apartment-pdf-zoom-in')?.addEventListener('click', () => {
+        if (!mobilePdfDocument) return;
+        mobilePdfScale = Math.min(mobilePdfFitScale * 4, mobilePdfScale * 1.25);
+        renderMobilePdfPage();
+    });
+    window.addEventListener('resize', () => {
+        if (mobilePdfDocument && isMobilePdfViewport()) {
+            requestAnimationFrame(() => renderMobilePdfPage(true));
+        }
+    });
+}
+
 function openApartmentPanel() {
     const apartment = state.selectedApartment;
     const panel = document.getElementById('apartment-panel');
@@ -32,11 +164,17 @@ function openApartmentPanel() {
     }
 
     title.textContent = apartment.name || 'Karta lokalu';
-    iframe.src = apartment.url + '#toolbar=1&navpanes=0&view=Fit';
 
     requestAnimationFrame(() => {
         panel.classList.remove('hidden');
         document.body.classList.add('apartment-panel-open');
+        if (isMobilePdfViewport()) {
+            openMobileApartmentPdf(apartment.url);
+        } else {
+            document.getElementById('apartment-pdf-mobile')?.classList.add('hidden');
+            iframe.classList.remove('hidden');
+            iframe.src = apartment.url + '#toolbar=1&navpanes=0&view=Fit';
+        }
     });
 }
 
@@ -50,8 +188,15 @@ function closeApartmentPanel() {
 
     if (iframe) {
         iframe.src = '';
+        iframe.classList.remove('hidden');
     }
 
+    mobilePdfRequestId++;
+    mobilePdfRenderTask?.cancel();
+    mobilePdfRenderTask = null;
+    mobilePdfDocument?.destroy();
+    mobilePdfDocument = null;
+    document.getElementById('apartment-pdf-mobile')?.classList.add('hidden');
     document.body.classList.remove('apartment-panel-open');
 }
 
@@ -76,6 +221,7 @@ function initApp() {
     loadApartmentsFromExcel();
     preloadAllFrames();
     initControls();
+    initMobilePdfControls();
     initTouchButtonFeedback();
 
     // Nasłuchiwanie na przycisk legendy

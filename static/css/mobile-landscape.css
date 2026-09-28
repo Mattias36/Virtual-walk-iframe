@@ -1,4 +1,5 @@
-@media (orientation: landscape) and (max-height: 600px) {
+@media (orientation: landscape) and (max-height: 600px),
+       (orientation: landscape) and (max-width: 960px) {
     :root {
         --button-icon-size: 16px;
     }
@@ -18,6 +19,8 @@
 
     #sidebar-container {
         width: 165px;
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
     }
 
     #sidebar-container:not(.open) {
@@ -55,11 +58,11 @@
     }
 
     .apartment-item .apt-title {
-        font-size: 12px;
+        font-size: 12px !important;
     }
 
     .apartment-item .apt-desc {
-        font-size: 9px;
+        font-size: 9px !important;
     }
 
     .info-card {

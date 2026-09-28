@@ -25,6 +25,10 @@
         <!-- WIDOK 1: MAKIETA 3D / NAWIGATOR (DOMYŚLNY)                          -->
         <!-- =================================================================== -->
         <div id="container-360">
+            <div id="loading-indicator" role="status" aria-live="polite">
+                <span id="loading-text">Ładowanie makiety: 0%</span>
+                <progress id="loading-progress" value="0" max="240"></progress>
+            </div>
             <div id="apartment-panel" class="hidden" aria-hidden="true">
                 <div class="apartment-panel-shell">
                     <div class="apartment-panel-header">
@@ -37,6 +41,21 @@
                     </div>
                     <div class="apartment-panel-body">
                         <iframe id="apartment-pdf-frame" title="Karta lokalu" loading="lazy"></iframe>
+                        <div id="apartment-pdf-mobile" class="hidden" aria-label="Podgląd karty lokalu">
+                            <div class="apartment-pdf-toolbar">
+                                <button id="apartment-pdf-prev" type="button" title="Poprzednia strona" aria-label="Poprzednia strona">‹</button>
+                                <span id="apartment-pdf-page">1 / 1</span>
+                                <button id="apartment-pdf-next" type="button" title="Następna strona" aria-label="Następna strona">›</button>
+                                <span class="apartment-pdf-toolbar-spacer"></span>
+                                <button id="apartment-pdf-fit" type="button" title="Dopasuj całą stronę" aria-label="Dopasuj całą stronę">Fit</button>
+                                <button id="apartment-pdf-zoom-out" type="button" title="Pomniejsz" aria-label="Pomniejsz">−</button>
+                                <span id="apartment-pdf-zoom">100%</span>
+                                <button id="apartment-pdf-zoom-in" type="button" title="Powiększ" aria-label="Powiększ">+</button>
+                            </div>
+                            <div id="apartment-pdf-viewport">
+                                <canvas id="apartment-pdf-canvas"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,6 +229,7 @@
     <!-- 1. Biblioteki zewnętrzne -->
     <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <!-- 2. Konfiguracja zmiennych pomocniczych dla spaceru -->
     <script>

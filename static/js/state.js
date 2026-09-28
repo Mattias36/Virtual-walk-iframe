@@ -17,6 +17,8 @@ export const state = {
     // Obrazy i ładowanie
     imagesBuildingCache: [],
     imagesMasksCache: [],
+    loadedBuildingCount: 0,
+    loadedMasksCount: 0,
     loadedFramesCount: 0,
     isMakietaReady: false,
     imgBuilding: null,

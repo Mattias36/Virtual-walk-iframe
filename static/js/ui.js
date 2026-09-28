@@ -6,6 +6,15 @@ const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;
 let sidebarScrollAnchor = null;
 
+function formatArea(value) {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) return value ?? '-';
+
+    return new Intl.NumberFormat('pl-PL', {
+        maximumFractionDigits: 2
+    }).format(numericValue);
+}
+
 function formatPrice(value) {
     if (value === null || value === undefined || value === '') return '-';
 
@@ -103,7 +112,7 @@ export function renderApartmentList() {
         item.innerHTML = `
             <div class="apt-title">${apt.name}</div>
             <div class="apt-desc">
-                ${apt.size} m² • <span class="badge ${statusClass}">${apt.status}</span>
+                ${formatArea(apt.size)} m² • <span class="badge ${statusClass}">${apt.status}</span>
             </div>
         `;
 
@@ -287,7 +296,7 @@ function showApartmentTooltipAtCenter(data, redraw = true) {
 
         tooltip.innerHTML = `
             <div class="tooltip-title">${data.name}</div>
-            <div class="tooltip-row"><span>Metraż:</span><span><strong>${data.size} m²</strong></span></div>
+            <div class="tooltip-row"><span>Metraż:</span><span><strong>${formatArea(data.size)} m²</strong></span></div>
             <div class="tooltip-row"><span>Pokoje:</span><span><strong>${data.rooms}</strong></span></div>
             <div class="tooltip-row"><span>Status:</span><span style="color: ${statusColor}; font-weight: bold;">${data.status}</span></div>
         `;

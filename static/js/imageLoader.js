@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { updateFrames } from './renderer.js';
+import { drawScene, updateFrames } from './renderer.js';
 
 export function padNumber(num) {
     return num.toString().padStart(4, '0');
@@ -21,10 +21,23 @@ function loadImage(src, callback) {
     });
 }
 
+function updateLoadingProgress() {
+    const progressElement = document.getElementById('loading-progress');
+    const textElement = document.getElementById('loading-text');
+    const totalAssets = state.totalFrames * 2;
+    const loadedAssets = state.loadedBuildingCount + state.loadedMasksCount;
+
+    if (progressElement) progressElement.value = loadedAssets;
+    if (textElement) {
+        textElement.textContent = `Ładowanie makiety: ${Math.round((loadedAssets / totalAssets) * 100)}%`;
+    }
+}
+
 // 1. Ładowanie makiety Z BLISKA (zdjęcia FHD + maski)
 export async function preloadAllFrames() {
     console.log("Rozpoczynam buforowanie zdjęć Z BLISKA...");
     const BATCH_SIZE = 6; 
+    updateLoadingProgress();
 
     // Zmiana: j < state.totalFrames zamiast <=
     for (let i = 0; i < state.totalFrames; i += BATCH_SIZE) {
@@ -35,10 +48,21 @@ export async function preloadAllFrames() {
             const pathBuilding = `./static/MovieRenders/zdjecia_fhd/NewLevelSequence.${frameStr}.jpg`;
             const pathMask = `./static/MovieRenders/Maski/Maski_rendery.${frameStr}.png`;
 
-            const bPromise = loadImage(pathBuilding, () => state.loadedBuildingCount++)
-                .then(img => { state.imagesBuildingCache[j] = img; });
+            const bPromise = loadImage(pathBuilding, () => {
+                state.loadedBuildingCount++;
+                updateLoadingProgress();
+            })
+                .then(img => {
+                    state.imagesBuildingCache[j] = img;
+                    if (img && j === state.currentFrame && state.viewType === 'near') {
+                        drawScene();
+                    }
+                });
 
-            const mPromise = loadImage(pathMask, () => state.loadedMasksCount++)
+            const mPromise = loadImage(pathMask, () => {
+                state.loadedMasksCount++;
+                updateLoadingProgress();
+            })
                 .then(img => { state.imagesMasksCache[j] = img; });
 
             batchPromises.push(bPromise, mPromise);
@@ -47,6 +71,7 @@ export async function preloadAllFrames() {
     }
     state.isMakietaReady = true;
     console.log("Klatki Z BLISKA załadowane.");
+    document.getElementById('loading-indicator')?.classList.add('hidden');
 
     // Pierwszy render po zakończeniu ładowania, bez oczekiwania na ruch myszy.
     updateFrames();

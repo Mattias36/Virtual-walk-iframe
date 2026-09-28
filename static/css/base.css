@@ -19,6 +19,8 @@
 html, body, #app-container, .viewer-container {
     height: 100vh; /* Fallback dla starszych przeglądarek */
     height: 100dvh; /* Dynamiczna wysokość uwzględniająca paski Safari */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     width: 100vw;
     margin: 0;
     padding: 0;
