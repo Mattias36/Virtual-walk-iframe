@@ -397,12 +397,13 @@ export function initControls() {
             state.mouseY = touch.clientY;
 
             if (state.isDragging) {
+                if (e.cancelable) e.preventDefault();
                 handleMove(touch.clientX);
             } else {
                 drawScene();
             }
         }
-    });
+    }, { passive: false });
     // Blokowanie propagacji na elementy interfejsu UI
     const stopUIPropagation = (e) => e.stopPropagation();
     const uiElements = [
