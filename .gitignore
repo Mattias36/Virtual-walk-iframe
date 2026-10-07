@@ -2,7 +2,7 @@
 node_modules/
 
 # Ciężkie zasoby graficzne i dane inwestycji
-
+mieszkania.xlsx
 
 # Pliki konfiguracyjne i lokalne
 *.json

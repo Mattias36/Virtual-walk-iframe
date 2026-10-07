@@ -1,5 +1,5 @@
-import { state } from './state.js';
-import { renderApartmentList } from './ui.js';
+import { state } from './state.js?v=20261007';
+import { renderApartmentList } from './ui.js?v=20261007';
 
 // Domyślna baza (gdy brak Excela)
 export const defaultColorLinks = [

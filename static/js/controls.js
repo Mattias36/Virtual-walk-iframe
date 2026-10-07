@@ -1,6 +1,6 @@
-import { state } from './state.js';
-import { updateFrames, drawScene, replayHighlightAnimation } from './renderer.js';
-import { toggleSidebar, selectApartment } from './ui.js';
+import { state } from './state.js?v=20261007';
+import { updateFrames, drawScene, replayHighlightAnimation } from './renderer.js?v=20261007';
+import { toggleSidebar, selectApartment } from './ui.js?v=20261007';
 
 const container = document.getElementById('container-360');
 const colorIdDisplay = document.getElementById('color-id');

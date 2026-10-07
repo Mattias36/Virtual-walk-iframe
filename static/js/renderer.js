@@ -1,5 +1,5 @@
-import { state, maskCanvas, maskCtx } from './state.js';
-import { padNumber } from './imageLoader.js';
+import { state, maskCanvas, maskCtx } from './state.js?v=20261007';
+import { padNumber } from './imageLoader.js?v=20261007';
 
 const canvas = document.getElementById('main-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;

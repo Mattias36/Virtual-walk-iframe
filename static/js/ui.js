@@ -1,6 +1,6 @@
-import { state } from './state.js';
-import { drawScene, getApartmentCenterCoords, replayHighlightAnimation, replayLegendAnimation } from './renderer.js';
-import { rotateToDirection } from './controls.js';
+import { state } from './state.js?v=20261007';
+import { drawScene, getApartmentCenterCoords, replayHighlightAnimation, replayLegendAnimation } from './renderer.js?v=20261007';
+import { rotateToDirection } from './controls.js?v=20261007';
 
 const tooltip = document.getElementById('apartment-tooltip');
 let pendingSelectionTimeout = null;

@@ -1,11 +1,11 @@
 // js/main.js
 
-import { loadApartmentsFromExcel } from './data.js';
-import { preloadAllFrames } from './imageLoader.js';
-import { initControls, rotateToDirection, switchMode, changeZoom, centerFarView, toggleFarMap } from './controls.js';
-import { toggleSidebar, selectApartment, toggleLegend } from './ui.js';
-import { state } from './state.js';
-import { toggleViewType } from './navigation.js'; // 1. IMPORT NOWEJ FUNKCJI
+import { loadApartmentsFromExcel } from './data.js?v=20261007';
+import { preloadAllFrames } from './imageLoader.js?v=20261007';
+import { initControls, rotateToDirection, switchMode, changeZoom, centerFarView, toggleFarMap } from './controls.js?v=20261007';
+import { toggleSidebar, selectApartment, toggleLegend } from './ui.js?v=20261007';
+import { state } from './state.js?v=20261007';
+import { toggleViewType } from './navigation.js?v=20261007'; // 1. IMPORT NOWEJ FUNKCJI
 
 // ==========================================================================
 // MOSTEK DLA HTML (Wystawienie funkcji do okna globalnego)

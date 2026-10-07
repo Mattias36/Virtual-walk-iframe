@@ -1,5 +1,5 @@
-import { state } from './state.js';
-import { drawScene, updateFrames } from './renderer.js';
+import { state } from './state.js?v=20261007';
+import { drawScene, updateFrames } from './renderer.js?v=20261007';
 
 export function padNumber(num) {
     return num.toString().padStart(4, '0');

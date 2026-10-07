@@ -1,6 +1,6 @@
-import { state } from './state.js';
-import { updateFrames, drawScene } from './renderer.js';
-import { resetZoom } from './controls.js';
+import { state } from './state.js?v=20261007';
+import { updateFrames, drawScene } from './renderer.js?v=20261007';
+import { resetZoom } from './controls.js?v=20261007';
 
 export function toggleViewType() {
     const statusBtn = document.getElementById('btn-toggle-legend');
