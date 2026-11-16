@@ -28,6 +28,8 @@ let mobilePdfScale = 1;
 let mobilePdfPageNumber = 1;
 let mobilePdfRequestId = 0;
 let mobilePdfRenderId = 0;
+const MOBILE_PDF_INITIAL_ZOOM = 2.44;
+const MOBILE_PDF_MAX_ZOOM = 6;
 
 function isMobilePdfViewport() {
     return window.matchMedia('(max-width: 960px), (orientation: landscape) and (max-height: 600px)').matches && window.pdfjsLib;
@@ -58,7 +60,7 @@ async function renderMobilePdfPage(fitPage = false) {
         const fitWidth = Math.max(1, viewportElement.clientWidth - 24) / baseViewport.width;
         const fitHeight = Math.max(1, viewportElement.clientHeight - 24) / baseViewport.height;
         mobilePdfFitScale = Math.min(fitWidth, fitHeight);
-        mobilePdfScale = mobilePdfFitScale;
+        mobilePdfScale = mobilePdfFitScale * MOBILE_PDF_INITIAL_ZOOM;
     }
 
     const pageViewport = page.getViewport({ scale: mobilePdfScale });
@@ -86,6 +88,11 @@ async function renderMobilePdfPage(fitPage = false) {
         if (error.name !== 'RenderingCancelledException') throw error;
     } finally {
         if (renderId === mobilePdfRenderId) mobilePdfRenderTask = null;
+    }
+
+    if (fitPage && renderId === mobilePdfRenderId) {
+        viewportElement.scrollLeft = (viewportElement.scrollWidth - viewportElement.clientWidth) / 2;
+        viewportElement.scrollTop = 0;
     }
 }
 
@@ -124,6 +131,60 @@ async function openMobileApartmentPdf(url) {
     }
 }
 
+function initMobilePdfPinchZoom() {
+    const viewportElement = document.getElementById('apartment-pdf-viewport');
+    const canvas = document.getElementById('apartment-pdf-canvas');
+    if (!viewportElement || !canvas) return;
+
+    let pinch = null;
+    const distance = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+
+    viewportElement.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 2 || !mobilePdfDocument) return;
+        const rect = canvas.getBoundingClientRect();
+        const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        pinch = {
+            startDistance: distance(e.touches),
+            startScale: mobilePdfScale,
+            ratio: 1,
+            // Punkt skupienia we współrzędnych płótna i viewportu
+            fx: cx - rect.left,
+            fy: cy - rect.top,
+            vx: cx - viewportElement.getBoundingClientRect().left,
+            vy: cy - viewportElement.getBoundingClientRect().top
+        };
+        canvas.style.transformOrigin = `${pinch.fx}px ${pinch.fy}px`;
+    }, { passive: true });
+
+    viewportElement.addEventListener('touchmove', (e) => {
+        if (!pinch || e.touches.length !== 2) return;
+        e.preventDefault();
+        const minScale = mobilePdfFitScale;
+        const maxScale = mobilePdfFitScale * MOBILE_PDF_MAX_ZOOM;
+        const target = Math.min(maxScale, Math.max(minScale, pinch.startScale * distance(e.touches) / pinch.startDistance));
+        pinch.ratio = target / pinch.startScale;
+        canvas.style.transform = `scale(${pinch.ratio})`;
+    }, { passive: false });
+
+    const endPinch = async () => {
+        if (!pinch) return;
+        const { ratio, fx, fy, vx, vy, startScale } = pinch;
+        pinch = null;
+        canvas.style.transform = '';
+        canvas.style.transformOrigin = '';
+        if (Math.abs(ratio - 1) < 0.01) return;
+        mobilePdfScale = startScale * ratio;
+        await renderMobilePdfPage();
+        const vRect = viewportElement.getBoundingClientRect();
+        const cRect = canvas.getBoundingClientRect();
+        viewportElement.scrollLeft += cRect.left - vRect.left + fx * ratio - vx;
+        viewportElement.scrollTop += cRect.top - vRect.top + fy * ratio - vy;
+    };
+    viewportElement.addEventListener('touchend', (e) => { if (e.touches.length < 2) endPinch(); });
+    viewportElement.addEventListener('touchcancel', endPinch);
+}
+
 function initMobilePdfControls() {
     document.getElementById('apartment-pdf-prev')?.addEventListener('click', () => {
         if (!mobilePdfDocument || mobilePdfPageNumber <= 1) return;
@@ -135,7 +196,11 @@ function initMobilePdfControls() {
         mobilePdfPageNumber++;
         renderMobilePdfPage(true);
     });
-    document.getElementById('apartment-pdf-fit')?.addEventListener('click', () => renderMobilePdfPage(true));
+    document.getElementById('apartment-pdf-fit')?.addEventListener('click', async () => {
+        await renderMobilePdfPage(true);
+        mobilePdfScale = mobilePdfFitScale;
+        renderMobilePdfPage();
+    });
     document.getElementById('apartment-pdf-zoom-out')?.addEventListener('click', () => {
         if (!mobilePdfDocument) return;
         mobilePdfScale = Math.max(mobilePdfFitScale, mobilePdfScale / 1.25);
@@ -143,9 +208,10 @@ function initMobilePdfControls() {
     });
     document.getElementById('apartment-pdf-zoom-in')?.addEventListener('click', () => {
         if (!mobilePdfDocument) return;
-        mobilePdfScale = Math.min(mobilePdfFitScale * 4, mobilePdfScale * 1.25);
+        mobilePdfScale = Math.min(mobilePdfFitScale * MOBILE_PDF_MAX_ZOOM, mobilePdfScale * 1.25);
         renderMobilePdfPage();
     });
+    initMobilePdfPinchZoom();
     window.addEventListener('resize', () => {
         if (mobilePdfDocument && isMobilePdfViewport()) {
             requestAnimationFrame(() => renderMobilePdfPage(true));
