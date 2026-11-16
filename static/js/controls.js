@@ -334,7 +334,9 @@ export function initControls() {
                 : state.hoveredApartment;
 
             if (aptId) {
-                selectApartment(aptId);
+                const isMobile = window.matchMedia('(max-width: 960px), (orientation: landscape) and (max-height: 600px)').matches;
+                const isSelected = state.selectedApartment?.id === aptId;
+                selectApartment(isMobile && isSelected ? null : aptId);
             }
         }
     });
